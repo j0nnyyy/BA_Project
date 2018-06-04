@@ -5,7 +5,7 @@
 
     **bzcat enwiki-*.xml.bz2 | scripts/w2j.py > output.json**
     
-    or to be easily to test convert limited size of the dump file (for example up to 10MB) by the following command: 
+    or for test reasons only there is possible to convert limited size of the dump file (for example up to 10MB) by the following command: 
     
       **bzcat enwiki-*.xml.bz2 | scripts/w2j.py | scripts/split.py 10M wiki.json**
       
