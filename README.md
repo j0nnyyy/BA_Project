@@ -9,4 +9,4 @@
     
       **bzcat enwiki-*.xml.bz2 | scripts/w2j.py | scripts/split.py 10M wiki.json**
       
-3. **main.py** currently loads converted JSON file into Apache Spark
+3. **main.py** loads converted JSON file into Apache Spark and contains some manipulations with Spark Dataframe
