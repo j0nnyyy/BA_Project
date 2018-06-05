@@ -43,8 +43,8 @@ class Node:
 
     def add_timestamp(self, iso):
         local = datetime.strptime(iso, '%Y-%m-%dT%H:%M:%SZ').timestamp()
-        utc = local - time.timezone
-        print(int(utc))
+        date = datetime.fromtimestamp(local).strftime('%Y-%m-%d %H:%M:%S')
+        print(json.dumps(date))
 
     # Adds previously appended text
     def _finish_multiline_text(self):
