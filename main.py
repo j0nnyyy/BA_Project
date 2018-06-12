@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import TimestampType
 from pyspark.sql.functions import from_unixtime
 
-filename = "short.json"
+filename = "output.json"
 
 spark = SparkSession \
     .builder \
