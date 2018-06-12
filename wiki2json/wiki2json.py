@@ -19,6 +19,9 @@ class Node:
     def _separator(self):
         return ',' if self._has_value else '{'
 
+    def skip_tag(self):
+        print('')
+
     def add_tag(self, tag):
         print('{}"{}":'.format(self._separator(), tag))
         if not self._has_value:
@@ -43,8 +46,8 @@ class Node:
 
     def add_timestamp(self, iso):
         local = datetime.strptime(iso, '%Y-%m-%dT%H:%M:%SZ').timestamp()
-        date = datetime.fromtimestamp(local).strftime('%Y-%m-%d %H:%M:%S')
-        print(json.dumps(date))
+        utc = local - time.timezone
+        print(int(utc))
 
     # Adds previously appended text
     def _finish_multiline_text(self):
@@ -57,6 +60,7 @@ class Node:
 
 class Wiki2Json:
     def __init__(self):
+        self._list_skipped_tags = ['format', 'sha1', 'model', 'minor']
         # One-line key-value
         self._re_one_line = re.compile(r'\s+<(\w+).*?>(.+)</\1>')
         # Beginning of a tag and maybe the beginning of its text
@@ -101,12 +105,21 @@ class Wiki2Json:
             #</revision>
             elif self._re_end_revision.match(line):
                 self._in_revision = False
+                
+                            # <tag text />
+            self_closed_tag = self._re_selfclosed_tag.match(line)
+            if self_closed_tag:
+                if self_closed_tag.group(1) == 'text':
+                    self._parent().skip_tag()
+            else:
             '''
             m = self._re_empty.match(line)
             # contributor as True messes the json schema inferred by Spark
             if m and m.group(1) != 'contributor':
                 self._parent().add_tag(m.group(1))
                 self._parent().add_value(True)
+            elif m and m.group(1) == 'minor':
+                self._parent().skip_tag()
             elif not m:
                 self._parse_page(line)
 
@@ -114,14 +127,17 @@ class Wiki2Json:
         m = self._re_one_line.match(line)
         if m:
             # <tag>text</tag>
-            self._parent().add_tag(m.group(1))
-            tag, value = m.group(1), m.group(2)
-            if tag.endswith('id') or tag == 'ns':
-                self._parent().add_value(int(value))
-            elif tag == 'timestamp':
-                self._parent().add_timestamp(value)
+            if m.group(1) in self._list_skipped_tags:
+                self._parent().skip_tag()
             else:
-                self._parent().add_value(value)
+                self._parent().add_tag(m.group(1))
+                tag, value = m.group(1), m.group(2)
+                if tag.endswith('id') or tag == 'ns':
+                    self._parent().add_value(int(value))
+                elif tag == 'timestamp':
+                    self._parent().add_timestamp(value)
+                else:
+                    self._parent().add_value(value)
         else:
             self._parse_multiline_tag(line)
 
