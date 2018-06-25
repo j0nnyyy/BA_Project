@@ -14,10 +14,10 @@ import lxml.etree as ET
 #infile_test = 'C:\\Users\\fischpet\\Forschung\\playground\\testxml1.xml'
 
 #infile = 'enwiki-20180520-stub-meta-history1.xml.gz'
-#infile = 'enwiki-20180520-stub-meta-history1.xml.gz'
-infile = '111.xml.gz'
+infile = 'enwiki-20180520-stub-meta-history1.xml.gz'
+#infile = '111.xml.gz'
 
-json_filename = 'json.json'
+json_filename = 'wikiJSON.json'
 
 skipped_tags = ['format', 'text', 'sha1', 'model', 'minor']
 
@@ -47,11 +47,8 @@ def parse_xml(filename):
                 tag_page[child.tag] = child.text
             elif child.tag == 'id':
                 tag_page[child.tag] = child.text
-        #print('revisons =', rev_array)
         tag_page['revision'] = rev_array
-        print('page', tag_page)
         save_to_json(tag_page)
-        print(str(rev_count)+' Revisions')
         wikiData.append(tag_page)
         # It's safe to call clear() here because no descendants will be accessed
         elem.clear()
@@ -70,5 +67,4 @@ def save_to_json(data):
 
 
 wikiData = parse_xml(infile)
-print('wikiData', wikiData)
 #save_to_json(wikiData)
