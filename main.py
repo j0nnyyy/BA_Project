@@ -3,7 +3,7 @@ from pyspark.sql.types import TimestampType, IntegerType
 from pyspark.sql.functions import from_unixtime, size, col, udf, explode
 import datetime
 
-filename = "short.json"
+filename = "wikiJSON.json"
 
 slen = udf(lambda s: len(s), IntegerType())
 
@@ -21,7 +21,7 @@ def init_df(df):
     columns_to_drop = ['redirect', 'ns', 'revision', 'date']
     df = df.withColumn("revision", explode("revision"))\
         .select("*",
-        col("revision")["comment"].alias("comment"),
+        #col("revision")["comment"].alias("comment"),
         col("revision")["contributor"]["username"].alias("author"),
         col("revision")["contributor"]["id"].alias("authorID"),
         col("revision")["timestamp"].alias("date"))\
@@ -41,7 +41,7 @@ def numbder_of_edits_per_author(df):
 
 # number of all authors per each article
 def number_of_authors_per_article(df):
-    df.groupBy("title", "author").agg({"author": "count"}).show()
+    df.groupBy("title", "author").agg({"author": "count"}).alias("count").show()
 
 def convert_to_timestamp(date_text):
     return datetime.datetime.strptime(date_text, "%Y-%m-%d %H:%M:%S")
@@ -50,20 +50,18 @@ def convert_to_timestamp(date_text):
 def number_of_authors_per_timestamp(df, startDate, endDate):
     startDate = convert_to_timestamp(startDate)
     endDate = convert_to_timestamp(endDate)
-    print(startDate)
-    print(endDate)
     df.groupBy("author").agg({"author": "count"}).filter(col("timestamp").isin([startDate, endDate])).show()
 
-
+#minHashing
 df = createDataFrame(filename)
 
 df_init = init_df(df)
 df_init.show()
+#number_of_authors_per_timestamp(df_init, '2001-01-21 03:00:00', '2001-06-03 23:00:00')
 numbder_of_edits_per_author(df_init)
 
 number_of_authors_per_article(df_init)
 
-number_of_authors_per_timestamp(df_init, '2001-01-21 03:00:00', '2001-06-03 23:00:00')
 
 #df2 = df_init.withColumn("revision_length", slen(df.revision))
 #df2.show()
