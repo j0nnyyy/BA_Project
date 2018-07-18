@@ -15,9 +15,9 @@ import time
 
 #infile_test = 'C:\\Users\\fischpet\\Forschung\\playground\\testxml1.xml'
 
-infile = 'enwiki-20180520-stub-meta-history1.xml.gz'
-
-json_filename = 'wikiJSON.json'
+#infile = 'enwiki-20180520-stub-meta-history1.xml.gz'
+infile = 'xml1.xml.gz'
+json_filename = 'XML_JSON.json'
 
 skipped_tags = ['{http://www.mediawiki.org/xml/export-0.10/}format',
                 '{http://www.mediawiki.org/xml/export-0.10/}text',
@@ -77,7 +77,6 @@ def extract_localpart(qname):
         localname = qname[namespace_sep_pos+1:]
     else:
         localname = qname
-    #print(localname)
     return localname
 
 
