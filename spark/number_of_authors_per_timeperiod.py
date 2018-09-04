@@ -10,9 +10,16 @@ print("Number of authors per time period over all articles")
 #df.groupBy("title").agg(func.count("*")
 #df_2001 = df.filter("month(editTime) == 10")
 
-df = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), f.month("editTime")))
-df_agg = df.groupBy("yearmonth", "author").count()
-df_agg.show()
+print("Number of edits per authors per timeperiod")
+df_author = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'),
+                                                format_string("%02d", f.month("editTime"))))
+df_agg_author = df_author.groupBy("yearmonth", "author").count()
+df_agg_author.show()
+
+print("Number of pages per timeperiod")
+df_page = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))
+df_agg_page = df_page.groupBy("yearmonth", "title").count()
+df_agg_page.show()
 
 #df = df.withColumn("timestampGMT", df.editTime.cast("timestamp"))
 #df = df.withColumn("count_per_timeperiod", f.count("title").over(Window.partitionBy(f.window("editTime", "7 days"))))

@@ -12,8 +12,8 @@ def number_of_authors_per_article(df):
 
 def number_of_revisions_per_article(df):
     print("Length of revisions:")
-    df_edits = df.groupBy("title").agg(func.count("*").alias("count"))\
-        .orderBy(desc("count"))
+    df_edits = df.groupBy("title").agg(func.count("*").alias("edit history length"))\
+        .orderBy(desc("edit history length"))
     return df_edits
 
 
@@ -22,4 +22,5 @@ def revisions_per_article():
     return number_of_revisions_per_article(df)
 
 
-revisions_per_article().show()
+total_edits = revisions_per_article()
+total_edits.show()

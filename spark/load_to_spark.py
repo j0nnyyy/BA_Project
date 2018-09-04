@@ -1,17 +1,15 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import TimestampType
-from pyspark.sql.window import Window
-from pyspark.sql.functions import from_unixtime, col, explode, desc
-import pyspark.sql.functions as f
+from pyspark.sql.functions import from_unixtime, col, desc, explode
+from pyspark.sql.functions import udf
+from pyspark.sql.types import IntegerType
 
-filename = '../XML_JSON.json'
-spark = SparkSession \
-    .builder \
-    .appName("Python Spark SQL basic example") \
-    .config("spark.some.config.option", "some-value") \
-    .getOrCreate()
+slen = udf(lambda s: len(s), IntegerType())
 
-def createDataFrame(filename):
+filename = '../myXML.json'
+
+
+def create_dataframe(filename):
     spark = SparkSession \
         .builder \
         .appName("Python Spark SQL basic example") \
@@ -28,7 +26,7 @@ def extract_df_from_revisions(df):
         .select("*",
         #col("revision")["comment"].alias("comment"),
         col("revision")["contributor"]["username"].alias("author"),
-        #col("revision")["contributor"]["id"].alias("authorID"),
+        col("revision")["contributor"]["id"].alias("authorID"),
         col("revision")["timestamp"].alias("date"))\
         .withColumn('editTime', from_unixtime('date', 'yyyy-MM-dd HH:mm:ss').cast(TimestampType()))
 
@@ -36,17 +34,27 @@ def extract_df_from_revisions(df):
     return df_res
 
 
+def init():
+    return create_dataframe(filename)
+
+
 def main_init_df():
-    df = createDataFrame(filename)
+    df = create_dataframe(filename)
     return extract_df_from_revisions(df)
 
 
-df = main_init_df()
-df.cache()
-df.persist
-
-NUM_DAYS = 3
-
-windowSpec = Window.partitionBy("title").orderBy("editTime").rangeBetween(-NUM_DAYS, NUM_DAYS)
-df.withColumn("occurrences", f.count("author").over(windowSpec)).show()
+df = init()
+print("Total revisions:")
+df_totalEdits = df.withColumn("total revisions", slen(df.revision)).orderBy(desc("total revisions"))
+df_totalEdits.cache()
+df_totalEdits.persist
+#df_totalEdits.show()
 #df.show(df.count(), False)
+
+print("Dataframe:")
+df_extracted = main_init_df()
+df_extracted.cache()
+df_extracted.persist()
+#df_extracted.show()
+
+

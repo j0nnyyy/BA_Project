@@ -2,7 +2,7 @@ from pyspark.sql import Row
 from pyspark.sql.window import Window
 from pyspark.sql.functions import col
 import pyspark.sql.functions as f
-from pyspark.sql.functions import date_add, date_sub, desc, format_string, to_timestamp, expr
+from pyspark.sql.functions import date_add, date_sub, desc, format_string, to_timestamp
 from pyspark.sql.types import TimestampType
 import load_to_spark
 
