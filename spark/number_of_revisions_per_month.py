@@ -57,6 +57,7 @@ df_formatted_ts = df_ts.withColumn("yearmonth", f.concat(f.year("yearmonth"), f.
 df_formatted_ts.show()
 
 
+
 df_group_ts = df_groups.crossJoin(df_formatted_ts)
 print("Cross Join -> Titles - Timestamps")
 df_group_ts.show()

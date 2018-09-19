@@ -97,10 +97,12 @@ def generate_date_series(start, stop):
 
 
 #spark.udf.register("generate_date_series", generate_date_series, ArrayType(DateType()))
-
+'''
 w = Window.orderBy("yearmonth")
 tempDf = df.withColumn("diff", months_between(f.lead(col("yearmonth"), 1).over(w), col("yearmonth")))\
     .filter(col("diff") > 1)\
     .withColumn("quantity", f.lit("0"))\
     .withColumn("missing_dates", explode(generate_date_series(col("yearmonth"), col("diff"))))\
     .withColumn("date", col("date").cast("timestamp"))
+'''
+winSpec = Window.partitionBy("title")
