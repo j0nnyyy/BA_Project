@@ -1,13 +1,11 @@
 from pyspark.sql.window import Window
 import pyspark.sql.functions as f
-from pyspark.sql.functions import desc, asc, format_string, col
+from pyspark.sql.functions import desc, asc, format_string, col, months_between, add_months
 import load_to_spark
 import datetime
 from pyspark.sql.functions import min as min_, max as max_
 from pyspark.sql import SparkSession
 from pyspark.sql import SQLContext
-
-step = 31*60*60*24
 
 spark = SparkSession \
     .builder \
@@ -21,7 +19,7 @@ df_gn = load_to_spark.init()
 
 df_groups = df_gn.select("title").distinct()
 #print("Unique article titles:")
-#df_groups.show()
+df_groups.show()
 
 df = load_to_spark.main_init_df()
 
@@ -34,7 +32,21 @@ df_monthly = df.groupBy("yearmonth", "title").count().orderBy(desc("count"))
 print("Number of edits per month over all articles: ")
 df_monthly.select("title", "yearmonth", "count").show()
 
+min_date, max_date = df_monthly_ts.select(min_("yearmonth").cast("long"), max_("yearmonth").cast("long")).first()
 
+
+data = [(min_date, max_date)]
+df_dates = spark.createDataFrame(data, ["minDate", "maxDate"])
+df_min_max_date = df_dates.withColumn("minDate", col("minDate").cast("timestamp")).withColumn("maxDate", col("maxDate").cast("timestamp"))
+
+df_formatted_ts1 = df_min_max_date.withColumn("monthsDiff", f.months_between("maxDate", "minDate"))\
+    .withColumn("repeat", f.expr("split(repeat(',', monthsDiff), ',')"))\
+    .select("*", f.posexplode("repeat").alias("date", "val"))\
+    .withColumn("date", f.expr("add_months(minDate, date)"))\
+    .withColumn("yearmonth", f.concat(f.year("date"), f.lit('-'), format_string("%02d", f.month("date"))))\
+    .select('yearmonth').show()
+
+step = 31*60*60*24
 min_date, max_date = df_monthly_ts.select(min_("yearmonth").cast("long"), max_("yearmonth").cast("long")).first()
 
 df_ts = spark.range(
@@ -42,17 +54,17 @@ df_ts = spark.range(
     .select(col("id").cast("timestamp").alias("yearmonth"))
 df_formatted_ts = df_ts.withColumn("yearmonth", f.concat(f.year("yearmonth"), f.lit('-'), format_string("%02d", f.month("yearmonth"))))\
     .select('yearmonth')
-#df_formatted_ts.show()
+df_formatted_ts.show()
 
 
 df_group_ts = df_groups.crossJoin(df_formatted_ts)
-#print("Cross Join -> Titles - Timestamps")
-#df_group_ts.show()
+print("Cross Join -> Titles - Timestamps")
+df_group_ts.show()
 
 df_allts = df_group_ts.join(df_monthly, ['title', 'yearmonth'], how='left') \
     .orderBy('title', 'yearmonth').select('title', 'yearmonth', 'count')
 
-#df_allts.orderBy(desc('count')).show(100)
+df_allts.orderBy(desc('count')).show(100)
 
 print('Calculate average edits per month for each article :')
 window = Window.partitionBy("title").orderBy('yearmonth').rowsBetween(-1, 1)
