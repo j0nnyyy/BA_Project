@@ -19,7 +19,7 @@ df_gn = load_to_spark.init()
 
 df_groups = df_gn.select("title").distinct()
 #print("Unique article titles:")
-df_groups.show()
+#df_groups.show()
 
 df = load_to_spark.main_init_df()
 
@@ -34,33 +34,21 @@ df_monthly.select("title", "yearmonth", "count").show()
 
 min_date, max_date = df_monthly_ts.select(min_("yearmonth").cast("long"), max_("yearmonth").cast("long")).first()
 
-
 data = [(min_date, max_date)]
 df_dates = spark.createDataFrame(data, ["minDate", "maxDate"])
 df_min_max_date = df_dates.withColumn("minDate", col("minDate").cast("timestamp")).withColumn("maxDate", col("maxDate").cast("timestamp"))
 
-df_formatted_ts1 = df_min_max_date.withColumn("monthsDiff", f.months_between("maxDate", "minDate"))\
+df_formatted_ts = df_min_max_date.withColumn("monthsDiff", f.months_between("maxDate", "minDate"))\
     .withColumn("repeat", f.expr("split(repeat(',', monthsDiff), ',')"))\
     .select("*", f.posexplode("repeat").alias("date", "val"))\
     .withColumn("date", f.expr("add_months(minDate, date)"))\
     .withColumn("yearmonth", f.concat(f.year("date"), f.lit('-'), format_string("%02d", f.month("date"))))\
-    .select('yearmonth').show()
-
-step = 31*60*60*24
-min_date, max_date = df_monthly_ts.select(min_("yearmonth").cast("long"), max_("yearmonth").cast("long")).first()
-
-df_ts = spark.range(
-    (min_date / step) * step, ((max_date / step) + 1) * step, step)\
-    .select(col("id").cast("timestamp").alias("yearmonth"))
-df_formatted_ts = df_ts.withColumn("yearmonth", f.concat(f.year("yearmonth"), f.lit('-'), format_string("%02d", f.month("yearmonth"))))\
     .select('yearmonth')
-df_formatted_ts.show()
-
-
+#df_formatted_ts.show()
 
 df_group_ts = df_groups.crossJoin(df_formatted_ts)
-print("Cross Join -> Titles - Timestamps")
-df_group_ts.show()
+#print("Cross Join -> Titles - Timestamps")
+#df_group_ts.show()
 
 df_allts = df_group_ts.join(df_monthly, ['title', 'yearmonth'], how='left') \
     .orderBy('title', 'yearmonth').select('title', 'yearmonth', 'count')
