@@ -15,9 +15,9 @@ import time
 
 #infile_test = 'C:\\Users\\fischpet\\Forschung\\playground\\testxml1.xml'
 
-#infile = 'enwiki-20180520-stub-meta-history1.xml.gz'
-infile = 'myXML.xml.gz'
-json_filename = 'myXML.json'
+infile = 'enwiki-20180520-stub-meta-history1.xml.gz'
+#infile = 'myXML.xml.gz'
+json_filename = 'Big_XML.json'
 
 skipped_tags = ['{http://www.mediawiki.org/xml/export-0.10/}format',
                 '{http://www.mediawiki.org/xml/export-0.10/}text',
