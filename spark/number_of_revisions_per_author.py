@@ -1,7 +1,11 @@
-from pyspark.sql.functions import desc
+from pyspark.sql.functions import desc, col, asc
+from pyspark.sql.window import Window
+import pyspark.sql.functions as f
+import matplotlib.pyplot as plt
+from pyspark_dist_explore import hist
 import load_to_spark
 
-
+search_text = ['Bot', 'Bots']
 # total number of edits per author
 def numbder_of_revisions_per_author(df):
     print("Number of edits per author")
@@ -14,4 +18,44 @@ def revisions_per_author():
     return numbder_of_revisions_per_author(df)
 
 
-revisions_per_author().show()
+def draw_histogram(df1, df2):
+    fig, axes = plt.subplots(nrows=2, ncols=2)
+    fig.set_size_inches(20, 20)
+    hist(axes[0, 0], [df1, df2], bins=20, color=['red', 'tan'])
+    axes[0, 0].legend()
+    axes[0, 0].set_title('Anzahl Revisionen zwischen Bots und Benutzer')
+    axes[0, 0].set_xlabel('Länge der Revisionen')
+    axes[0, 0].set_ylabel('Anzahl Autoren/Bots')
+    plt.savefig('Number_of_revisions_per_author(bots,real_users)')
+
+
+print("Number of revisions for all authors:")
+df = revisions_per_author()
+df_all_authors = df.where(col("author").isNotNull()).distinct()
+print('All authors count = ', df_all_authors.count())
+df_all_authors.cache()
+df_all_authors.show()
+
+df_percent = df_all_authors.withColumn('percent', f.round(col('count')/f.sum('count').over(Window.partitionBy()), 2))\
+    .orderBy(desc('percent'))
+df_percent.cache()
+df_percent.show()
+
+print("Select only Bots:")
+df_bots = df_all_authors.where(col("author").rlike('|'.join(search_text)))
+df_bots.cache()
+df_bots.show()
+print('Bots count = ', df_bots.count())
+
+
+print("Select all authors except bots:")
+df_real_users = df_all_authors.subtract(df_bots)
+df_real_users.cache()
+df_real_users.show()
+print('Real users count = ', df_real_users.count())
+
+df_bots_hist = df_bots.select(col("count").alias("bots"))
+df_users_hist = df_real_users.select(col("count").alias("real users"))
+
+draw_histogram(df_bots_hist, df_users_hist)
+print('DONE')

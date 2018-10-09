@@ -1,43 +1,78 @@
-from pyspark.sql import Row
-from pyspark.sql.window import Window
-from pyspark.sql.functions import col
 import pyspark.sql.functions as f
 from pyspark.sql.functions import *
+from pyspark.sql.functions import desc, col
+import matplotlib.pyplot as plt
+from pyspark_dist_explore import hist
 import load_to_spark
 
-df = load_to_spark.main_init_df()
-print("Number of authors per time period over all articles")
-#df.groupBy("title").agg(func.count("*")
-#df_2001 = df.filter("month(editTime) == 10")
 
-print("Number of edits per authors per timeperiod")
+def draw_histogram(df1, df2, df3):
+    fig, axes = plt.subplots(nrows=2, ncols=2)
+    fig.set_size_inches(20, 20)
+    hist(axes[0, 0], [df1], bins=20, color=['red'])
+    axes[0, 0].set_title('Anzahl von Revisionen pro Monat')
+    axes[0, 0].set_xlabel('Anzahl der Revisionen')
+    axes[0, 0].set_ylabel('Anzahl der Artikeln')
+    hist(axes[0, 1], [df2], bins=20, color=['blue'])
+    axes[0, 1].set_title('Anzahl von Revisionen über Autoren pro Monat')
+    axes[0, 1].set_xlabel('Anzahl der Revisionen pro Autor')
+    axes[0, 1].set_ylabel('Anzahl der Artikeln')
+    hist(axes[1, 0], [df3], bins=20, color=['tan'])
+    axes[1, 0].set_title('Variance')
+    axes[1, 0].set_xlabel('Variance')
+    axes[1, 0].set_ylabel('Anzahl der Artikeln')
+    plt.savefig('NumberOfRevisionsPerMonth_AuthorRevisionsPerMonth')
+
+
+def compute_variance(df):
+    df_res = df.groupBy("title").agg(f.round(f.var_pop("count"), 2).alias("variance"))
+    return df_res
+
+
+# total number of revisions per article
+def number_of_revisions_per_article(df):
+    df_total_revisions = df.groupBy("title").agg(f.count("*").alias("total revisions"))\
+        .orderBy(desc("total revisions"))
+    return df_total_revisions
+
+
+df = load_to_spark.main_init_df()
+
+print("Number of edits per authors per month:")
 df_author = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'),
                                                 format_string("%02d", f.month("editTime"))))
-df_agg_author = df_author.groupBy("yearmonth", "author").count()
-df_agg_author.show()
+df_authors_per_month = df_author.groupBy("yearmonth", "author").count().orderBy(desc("yearmonth"))
+df_authors_per_month.cache()
+df_authors_per_month.show()
 
-print("Number of pages per timeperiod")
+
+print("Number of pages per month:")
 df_page = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))
-df_agg_page = df_page.groupBy("yearmonth", "title").count()
-df_agg_page.show()
+df_pages_per_month = df_page.groupBy("yearmonth", "title").count().orderBy(desc("count"))
+df_pages_per_month.cache()
+df_pages_per_month.show()
 
-#df = df.withColumn("timestampGMT", df.editTime.cast("timestamp"))
-#df = df.withColumn("count_per_timeperiod", f.count("title").over(Window.partitionBy(f.window("editTime", "7 days"))))
-#df.show()
-#tumblingWindowDS = df_2001.groupBy(window(col("editTime"), "1 week"))
-#tumblingWindowDS.show()
-#df_2001.show()
+print("Number of revisions per article:")
+df_all_revisions = number_of_revisions_per_article(df)
+df_all_revisions.cache()
+df_all_revisions.show()
 
-'''
-window = (Window().partitionBy(col("title"))
-          .orderBy(col("editTIme").cast("timestamp").cast("long")).rangeBetween(-days(30), 0))
 
-df = df.withColumn("monthly_occurrences", func.count("author").over(window))
-df.show()
-df.orderBy(desc("monthly_occurrences")).show()
+df_joined = df_pages_per_month.join(df_all_revisions, ['title'], how='outer')\
+    .orderBy('title', 'yearmonth')\
+    .select('yearmonth', 'title', 'count', 'total revisions')
+df_joined.cache()
+df_joined.orderBy(desc("count")).show(20)
 
-'''
+df_variance = compute_variance(df_joined)
+df_variance.cache()
+df_variance.orderBy(desc("variance")).show(20)
+print('Count variance = ', df_variance.count())
 
-#df = df.withColumn("yearmonth", func.concat(func.year("editTime"), func.lit('-'), func.month("editTime")))
-#df_agg = df.groupBy("yearmonth", "title").count()
-#df_agg.show()
+# Draw histograms
+df_authors_per_month_hist = df_authors_per_month.select(col("count")).alias("Edits of users per month")
+df_pages_per_month_hist = df_pages_per_month.select(col("count")).alias('Edits per month for each article')
+df_variance_hist = df_variance.select(col("variance")).alias('Variance overall statistics')
+draw_histogram(df_pages_per_month_hist, df_authors_per_month_hist, df_variance_hist)
+
+print('DONE')

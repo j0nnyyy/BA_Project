@@ -1,11 +1,28 @@
 from pyspark.sql.window import Window
 import pyspark.sql.functions as f
-from pyspark.sql.functions import desc, asc, format_string, col, months_between, add_months
+from pyspark.sql.functions import desc, asc, format_string, col
 import load_to_spark
-import datetime
 from pyspark.sql.functions import min as min_, max as max_
+import matplotlib.pyplot as plt
+from pyspark_dist_explore import hist
 from pyspark.sql import SparkSession
-from pyspark.sql import SQLContext
+
+
+def draw_histogram(df1, df2):
+    fig, axes = plt.subplots(nrows=2, ncols=2)
+    fig.set_size_inches(20, 20)
+    hist(axes[0, 0], [df1], bins=20, color=['red'])
+    axes[0, 0].set_title('Durchschnittliche Anzahl von Revisionen pro Monat')
+    axes[0, 0].set_xlabel('Länge der Revisionen')
+    axes[0, 0].set_ylabel('Anzahl der Artikeln')
+    axes[0, 0].legend()
+    hist(axes[0, 1], [df2], bins=20, color=['blue'])
+    axes[0, 1].set_title('Anzahl von Revisionen pro Monat')
+    axes[0, 1].set_xlabel('Länge der Revisionen')
+    axes[0, 1].set_ylabel('Anzahl der Artikeln')
+    axes[0, 1].legend()
+    plt.savefig('Average_Number_Of_Revisions_per_Month')
+
 
 spark = SparkSession \
     .builder \
@@ -14,12 +31,8 @@ spark = SparkSession \
     .getOrCreate()
 
 df_gn = load_to_spark.init()
-#print('Initial DF:')
-#df_gn.select("id", "title", "revision").show()
 
 df_groups = df_gn.select("title").distinct()
-#print("Unique article titles:")
-#df_groups.show()
 
 df = load_to_spark.main_init_df()
 
@@ -44,11 +57,8 @@ df_formatted_ts = df_min_max_date.withColumn("monthsDiff", f.months_between("max
     .withColumn("date", f.expr("add_months(minDate, date)"))\
     .withColumn("yearmonth", f.concat(f.year("date"), f.lit('-'), format_string("%02d", f.month("date"))))\
     .select('yearmonth')
-#df_formatted_ts.show()
 
 df_group_ts = df_groups.crossJoin(df_formatted_ts)
-#print("Cross Join -> Titles - Timestamps")
-#df_group_ts.show()
 
 df_allts = df_group_ts.join(df_monthly, ['title', 'yearmonth'], how='left') \
     .orderBy('title', 'yearmonth').select('title', 'yearmonth', 'count')
@@ -65,5 +75,13 @@ print('Select only records where #edits > #average_edits :')
 df_filtered = df_avg.where("count > avg")
 df_filtered.show()
 
+df_avg_hist = df_filtered.select(col("avg").alias('Average edits per month')).orderBy(desc('Average edits per month'))
+df_avg_hist.cache()
+df_avg_hist.show()
+print('count =', df_avg_hist.count())
+df_count_hist = df_filtered.select(col("count").alias('Total edits per month'))
+
+draw_histogram(df_avg_hist, df_count_hist)
+print('DONE')
 
 

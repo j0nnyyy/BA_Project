@@ -61,6 +61,7 @@ spark = SparkSession \
 df_gn = create_rand_pairs_groups_nested_df(2, 10)
 
 df_ts = spark.createDataFrame(alltslist, ["ts_ref"])
+df_ts.show()
 
 df_groups = spark.createDataFrame(allgroups, ['group_ref'])
 
