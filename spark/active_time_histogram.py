@@ -48,6 +48,8 @@ def draw_histogram(df1, df2, df3):
     fig, axes = plt.subplots(nrows=2, ncols=2)
     fig.set_size_inches(20, 20)
     hist(axes[0, 0], [df1], bins=20, color=['red'])
+    axes[0, 0].set_ylim([0, 50])
+    axes[0, 0].set_xlim([0, 30])
     axes[0, 0].set_title('Aktualität des Artikels')
     axes[0, 0].set_xlabel('Zeitraum (Anazhl Monaten)')
     axes[0, 0].set_ylabel('Länge (Anzahl Revisionen)')

@@ -3,25 +3,32 @@ from pyspark.mllib.regression import LabeledPoint
 from pyspark.ml.linalg import Vectors
 from pyspark.ml.feature import MinHashLSH
 from pyspark.sql.functions import desc, asc, col
-from pyspark.sql.types import DoubleType
 from pyspark.sql.functions import udf
 import load_to_spark
 from pyspark.sql.window import Window as W
 import pyspark.sql.functions as f
 
-df_gn = load_to_spark.main_init_df()
+search_text = ['Bot', 'Bots']
 
+df_gn = load_to_spark.main_init_df()
 
 df_titles = df_gn.select("title", "author").where(col("author").isNotNull())
 
-
-print("Determine all distinct authors and generate IDs for each : ")
+#Determine all distinct authors and generate IDs for each
 df_all_authors = df_gn.select("author").where(col("author").isNotNull()).distinct()
+#print(df_all_authors.count())
 
-print(df_all_authors.count())
+#Select only Bots
+df_bots = df_all_authors.where(col("author").rlike('|'.join(search_text)))
+#print('Bots count = ', df_bots.count())
+
+#Select all authors except bots
+df_real_users = df_all_authors.subtract(df_bots)
+#print('Real users count = ', df_real_users.count())
 
 windowSpec = W.orderBy("author")
-df_authors = df_all_authors.withColumn("Id", f.row_number().over(windowSpec))
+df_authors = df_real_users.withColumn("Id",
+                                      f.row_number().over(windowSpec))
 df_authors.show()
 
 print("Join both dataframes by author-column:")
@@ -35,9 +42,11 @@ df_joined.show(20)
 
 dfWithFeat = df_joined\
     .rdd\
-    .map(lambda row: (row['id'], row['title'])).groupByKey()\
-    .map(lambda row: LabeledPoint(row['title'], Vectors.sparse(1000, row['features'].toArray())))\
-    .toDS
+    .map(lambda row: (row['title'], row['id'])).groupByKey().toDF()
+    #.map(lambda row: LabeledPoint(row[0], Vectors.sparse(10000, row[1])))\
+    #.toDF()
+
+dfWithFeat.show(2)
 
 
 df_pivoted = df_joined.groupBy("title").pivot("id").count().na.fill(0)

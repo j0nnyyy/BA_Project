@@ -2,14 +2,14 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import TimestampType
 from pyspark.sql.functions import from_unixtime, col, desc, explode
 
-filename = '../XML_TEST.json'
-#filename = '../myXML.json'
+#filename = '../XML_TEST.json'
+filename = '../myXML.json'
 
 def create_dataframe(filename):
     spark = SparkSession \
         .builder \
         .appName("Python Spark SQL basic example") \
-        .config("spark.some.config.option", "some-value") \
+        .config("spark.executor.memory", "128g") \
         .getOrCreate()
     df = spark.read.load(filename, format="json")
     return df

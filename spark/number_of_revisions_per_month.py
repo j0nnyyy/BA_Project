@@ -27,7 +27,7 @@ def draw_histogram(df1, df2):
 spark = SparkSession \
     .builder \
     .appName("Python Spark SQL basic example") \
-    .config("spark.some.config.option", "some-value") \
+    .config("spark.executor.memory", "128g") \
     .getOrCreate()
 
 df_gn = load_to_spark.init()

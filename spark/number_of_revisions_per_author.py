@@ -21,7 +21,8 @@ def revisions_per_author():
 def draw_histogram(df1, df2):
     fig, axes = plt.subplots(nrows=2, ncols=2)
     fig.set_size_inches(20, 20)
-    hist(axes[0, 0], [df1, df2], bins=20, color=['red', 'tan'])
+    axes[0, 0].set_ylim([0, 1000])
+    hist(axes[0, 0], [df1, df2], bins=10, color=['red', 'tan'])
     axes[0, 0].legend()
     axes[0, 0].set_title('Anzahl Revisionen zwischen Bots und Benutzer')
     axes[0, 0].set_xlabel('Länge der Revisionen')
