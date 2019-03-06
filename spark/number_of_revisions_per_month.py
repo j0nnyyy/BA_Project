@@ -1,3 +1,11 @@
+#init spark modules
+import findspark
+findspark.init()
+
+#changed matplotlib display from its default value to enable plot saving
+import matplotlib
+matplotlib.use('Agg')
+
 from pyspark.sql.window import Window
 import pyspark.sql.functions as f
 from pyspark.sql.functions import desc, asc, format_string, col
@@ -13,15 +21,17 @@ def draw_histogram(df1, df2):
     fig.set_size_inches(20, 20)
     hist(axes[0, 0], [df1], bins=20, color=['red'])
     axes[0, 0].set_title('Durchschnittliche Anzahl von Revisionen pro Monat')
-    axes[0, 0].set_xlabel('Länge der Revisionen')
+    #changed non-ascii character to prevent errors
+    axes[0, 0].set_xlabel('Laenge der Revisionen')
     axes[0, 0].set_ylabel('Anzahl der Artikeln')
     axes[0, 0].legend()
     hist(axes[0, 1], [df2], bins=20, color=['blue'])
     axes[0, 1].set_title('Anzahl von Revisionen pro Monat')
-    axes[0, 1].set_xlabel('Länge der Revisionen')
+    #changed non-ascii character to prevent errors
+    axes[0, 1].set_xlabel('Laenge der Revisionen')
     axes[0, 1].set_ylabel('Anzahl der Artikeln')
     axes[0, 1].legend()
-    plt.savefig('Average_Number_Of_Revisions_per_Month')
+    plt.savefig('/home/ubuntu/Average_Number_Of_Revisions_per_Month')
 
 
 spark = SparkSession \
@@ -29,6 +39,8 @@ spark = SparkSession \
     .appName("Python Spark SQL basic example") \
     .config("spark.executor.memory", "128g") \
     .getOrCreate()
+
+
 
 df_gn = load_to_spark.init()
 

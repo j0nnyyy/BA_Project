@@ -2,8 +2,8 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import TimestampType
 from pyspark.sql.functions import from_unixtime, col, desc, explode
 
-#filename = '../XML_TEST.json'
-filename = '../myXML.json'
+filename = '/home/ubuntu/BA_Project/XML_JSON.json'
+#filename = '/scratch/wikipedia-dump/wikiJSON.json'
 
 def create_dataframe(filename):
     spark = SparkSession \

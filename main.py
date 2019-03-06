@@ -3,7 +3,7 @@ from pyspark.sql.types import TimestampType, IntegerType
 from pyspark.sql.functions import from_unixtime, size, col, udf, explode
 import datetime
 
-filename = "wikiJSON.json"
+filename = "XML_JSON.json"
 
 slen = udf(lambda s: len(s), IntegerType())
 
