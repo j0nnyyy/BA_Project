@@ -29,7 +29,7 @@ def draw_histogram(df1, df2):
     hist(axes[0, 0], [df1, df2], bins=10, color=['red', 'tan'])
     axes[0, 0].legend()
     axes[0, 0].set_title('Anzahl Revisionen zwischen Bots und Benutzer')
-    axes[0, 0].set_xlabel('Länge der Revisionen')
+    axes[0, 0].set_xlabel('Laenge der Revisionen')
     axes[0, 0].set_ylabel('Anzahl Autoren/Bots')
     plt.savefig('Number_of_revisions_per_author(bots,real_users)')
 

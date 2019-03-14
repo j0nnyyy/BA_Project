@@ -18,7 +18,7 @@ def draw_histogram(df1, df2, df3):
     axes[0, 0].set_xlabel('Anzahl der Revisionen')
     axes[0, 0].set_ylabel('Anzahl der Artikeln')
     hist(axes[0, 1], [df2], bins=20, color=['blue'])
-    axes[0, 1].set_title('Anzahl von Revisionen über Autoren pro Monat')
+    axes[0, 1].set_title('Anzahl von Revisionen ueber Autoren pro Monat')
     axes[0, 1].set_xlabel('Anzahl der Revisionen pro Autor')
     axes[0, 1].set_ylabel('Anzahl der Artikeln')
     hist(axes[1, 0], [df3], bins=20, color=['tan'])
