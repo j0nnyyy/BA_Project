@@ -1,7 +1,3 @@
-#init spark modules
-import findspark
-findspark.init()
-
 #changed matplotlib display from its default value to enable plot saving
 import matplotlib
 matplotlib.use('Agg')

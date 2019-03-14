@@ -1,3 +1,7 @@
+#changed matplotlib display from its default value to enable plot saving
+import matplotlib
+matplotlib.use('Agg')
+
 from pyspark.ml.linalg import Vectors
 from pyspark.ml.feature import MinHashLSH
 from pyspark.sql.functions import desc, asc, col

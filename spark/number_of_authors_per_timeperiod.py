@@ -1,3 +1,7 @@
+﻿#changed matplotlib display from its default value to enable plot saving
+import matplotlib
+matplotlib.use('Agg')
+
 import pyspark.sql.functions as f
 from pyspark.sql.functions import *
 from pyspark.sql.functions import desc, col

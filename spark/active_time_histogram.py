@@ -1,3 +1,7 @@
+﻿#changed matplotlib display from its default value to enable plot saving
+import matplotlib
+matplotlib.use('Agg')
+
 from pyspark.sql.functions import from_unixtime, col, desc, asc, to_timestamp, months_between, udf
 import pyspark.sql.functions as f
 import load_to_spark
