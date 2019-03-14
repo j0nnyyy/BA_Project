@@ -2,8 +2,10 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import TimestampType
 from pyspark.sql.functions import from_unixtime, col, desc, explode
 
-filename = '/home/ubuntu/BA_Project/XML_JSON.json'
 #filename = '/scratch/wikipedia-dump/wikiJSON.json'
+filename = '/scratch/wikipedia-dump/wiki_small_5.json'
+#filename = '/home/ubuntu/BA_Project/XML_JSON.json'
+#filename = '/scratch/wikipedia-dump/wiki_small_old.json'
 
 def create_dataframe(filename):
     spark = SparkSession \
@@ -28,6 +30,17 @@ def extract_df_from_revisions(df):
     df_res = df.drop(*columns_to_drop)
     return df_res
 
+def test(df):
+    columns_to_drop = ['redirect', 'ns', 'revisions']
+    df.select(col("revision")["timestamp"].alias("date")).show()
+    df = df.withColumn("revision", explode("revision"))\
+	.select("*",
+		col("revision")["contributor"]["username"].alias("author"),
+		col("revision")["contributor"]["id"].alias("authorID"),
+		col("revision")["timestamp"].alias("editTime"))
+
+    df_res = df.drop(*columns_to_drop)
+    return df_res
 
 def init():
     return create_dataframe(filename)
@@ -35,7 +48,8 @@ def init():
 
 def main_init_df():
     df = create_dataframe(filename)
-    return extract_df_from_revisions(df)
+    return test(df)
 
-
-
+def main_init_df_test():
+    df = create_dataframe(filename)
+    return test(df)

@@ -15,8 +15,10 @@ import time
 
 #infile_test = 'C:\\Users\\fischpet\\Forschung\\playground\\testxml1.xml'
 
-infile = 'enwiki-20180520-stub-meta-history1.xml.gz'
+#infile = 'enwiki-20180520-stub-meta-history1.xml.gz'
 #infile = 'myXML.xml.gz'
+infile = 'testxml2.xml'
+
 json_filename = 'Big_XML.json'
 
 skipped_tags = ['{http://www.mediawiki.org/xml/export-0.10/}format',
@@ -33,7 +35,12 @@ def convert_timestamp(iso):
     return int(utc)
 
 def parse_xml(filename):
-    f = gzip.open(filename, 'r')
+    if filename.endswith('.gz'):
+    	f = gzip.open(filename, 'r')
+    elif filename.endswith('.xml'):
+        f = open(filename, 'rb')
+    else:
+	print('Illegal file type')
     context = etree.iterparse(f, events=('end',), tag='{http://www.mediawiki.org/xml/export-0.10/}page')
     for event, elem in context:
         tag_page = {}

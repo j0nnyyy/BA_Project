@@ -1,3 +1,7 @@
+#change mathplotlib display from its default value to enable plot saving
+import matplotlib
+matplotlib.use('agg')
+
 from pyspark.sql.functions import desc, col, asc
 import pyspark.sql.functions as f
 import matplotlib.pyplot as plt
@@ -28,11 +32,11 @@ def draw_histogram(df1, df2):
     fig.set_size_inches(20, 20)
     axes[0, 1].set_ylim([0, 200])
     hist(axes[0, 0], [df1], bins=20, color=['red'])
-    axes[0, 0].set_title('Anzahl von Revisionen über allen Artikeln')
+    axes[0, 0].set_title('Anzahl von Revisionen ueber allen Artikeln')
     axes[0, 0].set_xlabel('Anzahl der Revisionen')
     axes[0, 0].set_ylabel('Anzahl der Artikeln')
     hist(axes[0, 1], [df2], bins=20, color=['blue'])
-    axes[0, 1].set_title('Anzahl von Revisionen über Autoren pro Artikel')
+    axes[0, 1].set_title('Anzahl von Revisionen ueber Autoren pro Artikel')
     axes[0, 1].set_xlabel('Anzahl der Revisionen per Autor')
     axes[0, 1].set_ylabel('Anzahl der Artikeln')
     plt.savefig('Number_of_revisions_per_article')

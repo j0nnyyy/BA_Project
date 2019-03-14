@@ -9,7 +9,7 @@ from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName("min_max_date").config("spark.executor.memory", "128g").getOrCreate()
 
-df = load_to_spark.main_init_df()
+df = load_to_spark.main_init_df_test()
 #df.show()
 
 df_monthly_ts = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("edittime")))).withColumn("yearmonth", col("yearmonth").cast("timestamp"))
