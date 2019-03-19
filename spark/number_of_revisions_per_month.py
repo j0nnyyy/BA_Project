@@ -106,7 +106,7 @@ draw_histogram(df_avg_hist, df_count_hist)
 #calculate duration and write the application information to the log file
 duration = end_time - start_time
 file = open(logpath, 'a+')
-file.write(worker_count, file_count, duration)
+file.write(worker_count + " " + file_count + " " + duration)
 
 print('DONE')
 
