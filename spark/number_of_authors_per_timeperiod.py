@@ -8,6 +8,7 @@ from pyspark.sql.functions import desc, col
 import matplotlib.pyplot as plt
 from pyspark_dist_explore import hist
 import load_to_spark
+import time
 
 logpath = '/home/ubuntu/BA_Project/log.txt'
 

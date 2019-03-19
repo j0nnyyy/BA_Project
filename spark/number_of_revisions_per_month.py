@@ -10,6 +10,7 @@ from pyspark.sql.functions import min as min_, max as max_
 import matplotlib.pyplot as plt
 from pyspark_dist_explore import hist
 from pyspark.sql import SparkSession
+import time
 
 logpath = '/home/ubuntu/BA_Project/log.txt'
 

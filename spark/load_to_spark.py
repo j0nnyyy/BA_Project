@@ -4,20 +4,20 @@ from pyspark.sql.types import TimestampType
 from pyspark.sql.functions import from_unixtime, col, desc, explode
 
 #filename = '/scratch/wikipedia-dump/wikiJSON.json'
-filename = '/scratch/wikipedia-dump/wiki_small_5.json'
-#filename = '/home/ubuntu/BA_Project/XML_JSON.json'
+#filename = '/scratch/wikipedia-dump/wiki_small_5.json'
+filename = '/scratch/wikipedia-dump/XML_JSON.json'
 #filename = '/scratch/wikipedia-dump/wiki_small_old.json'
 
 sc = None
 
 def create_dataframe(filename):
-	global sc
+    global sc
     spark = SparkSession \
         .builder \
         .appName("Python Spark SQL basic example") \
         .config("spark.executor.memory", "128g") \
         .getOrCreate()
-	sc = spark.sparkContext
+    sc = spark.sparkContext
     df = spark.read.load(filename, format="json")
     return df
 

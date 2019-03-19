@@ -10,6 +10,7 @@ from pyspark.sql.window import Window as W
 import pyspark.sql.functions as f
 import matplotlib.pyplot as plt
 from pyspark_dist_explore import hist
+import time
 
 search_text = ['Bot', 'Bots']
 logpath = '/home/ubuntu/BA_Project/log.txt'
