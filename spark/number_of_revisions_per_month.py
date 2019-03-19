@@ -11,6 +11,10 @@ import matplotlib.pyplot as plt
 from pyspark_dist_explore import hist
 from pyspark.sql import SparkSession
 
+logpath = '/home/ubuntu/BA_Project/log.txt'
+
+#retrieve loaded file count
+file_count = load_to_spark.filename.count(',') + 1
 
 def draw_histogram(df1, df2):
     fig, axes = plt.subplots(nrows=2, ncols=2)
@@ -36,9 +40,13 @@ spark = SparkSession \
     .config("spark.executor.memory", "128g") \
     .getOrCreate()
 
-
+#get start time
+start_time = time.time()
 
 df_gn = load_to_spark.init()
+
+#retrieve spark worker count
+worker_count = load_to_spark.sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 
 df_groups = df_gn.select("title").distinct()
 
@@ -89,7 +97,16 @@ df_avg_hist.show()
 print('count =', df_avg_hist.count())
 df_count_hist = df_filtered.select(col("count").alias('Total edits per month'))
 
+#get end time
+end_time = time.time()
+
 draw_histogram(df_avg_hist, df_count_hist)
+
+#calculate duration and write the application information to the log file
+duration = end_time - start_time
+file = open(logpath, 'a+')
+file.write(worker_count, file_count, duration)
+
 print('DONE')
 
 

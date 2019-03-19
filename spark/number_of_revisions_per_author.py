@@ -10,6 +10,11 @@ from pyspark_dist_explore import hist
 import load_to_spark
 
 search_text = ['Bot', 'Bots']
+logpath = '/home/ubuntu/BA_Project/log.txt'
+
+#retrieve loaded file count
+file_count = load_to_spark.filename.count(',') + 1
+
 # total number of edits per author
 def numbder_of_revisions_per_author(df):
     print("Number of edits per author")
@@ -33,9 +38,15 @@ def draw_histogram(df1, df2):
     axes[0, 0].set_ylabel('Anzahl Autoren/Bots')
     plt.savefig('Number_of_revisions_per_author(bots,real_users)')
 
+#get start time
+start_time = time.time()
 
 print("Number of revisions for all authors:")
 df = revisions_per_author()
+
+#retrieve spark worker count
+worker_count = load_to_spark.sc._jsc.sc().getExecutorMemoryStatus().size() - 1
+
 df_all_authors = df.where(col("author").isNotNull()).distinct()
 print('All authors count = ', df_all_authors.count())
 df_all_authors.cache()
@@ -62,5 +73,14 @@ print('Real users count = ', df_real_users.count())
 df_bots_hist = df_bots.select(col("count").alias("bots"))
 df_users_hist = df_real_users.select(col("count").alias("real users"))
 
+#get end time
+end_time = time.time()
+
 draw_histogram(df_bots_hist, df_users_hist)
+
+#calculate duration and write the application information to the log file
+duration = end_time - start_time
+file = open(logpath, 'a+')
+file.write(worker_count, file_count, duration)
+
 print('DONE')

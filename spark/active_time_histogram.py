@@ -8,9 +8,14 @@ import load_to_spark
 import matplotlib.pyplot as plt
 from pyspark_dist_explore import hist
 from pyspark.sql.types import IntegerType
+import time
+
+logpath = '/home/ubuntu/BA_Project/log.txt'
+
+#retrieve loaded file count
+file_count = load_to_spark.filename.count(',') + 1
 
 slen = udf(lambda s: len(s), IntegerType())
-
 
 def creation_date_of_article(df):
     columns_to_drop = ['redirect', 'ns', 'revision', 'date']
@@ -67,8 +72,14 @@ def draw_histogram(df1, df2, df3):
     axes[1, 0].set_ylabel('Anzahl Artikeln')
     plt.savefig('CreationTime_ActiveTime_TimeSinceLastEdit_Histogram')
 
-
+#get start time
+start_time = time.time()
+	
 df = load_to_spark.init()
+
+#retrieve spark worker count
+worker_count = load_to_spark.sc._jsc.sc().getExecutorMemoryStatus().size() - 1
+
 df_res = join_last_and_creation_dates(df)
 df_res.show()
 
@@ -88,7 +99,15 @@ df_since_last_edit.cache()
 df_since_last_edit.persist()
 df_since_last_edit.show()
 
+#get end time
+end_time = time.time()
+
 draw_histogram(df_active_time, df_since_last_edit, df_article_creation)
+
+#calculate duration and write the application information to the log file
+duration = end_time - start_time
+file = open(logpath, 'a+')
+file.write(worker_count, file_count, duration)
 
 print('DONE')
 

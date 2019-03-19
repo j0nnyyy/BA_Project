@@ -9,6 +9,10 @@ import matplotlib.pyplot as plt
 from pyspark_dist_explore import hist
 import load_to_spark
 
+logpath = '/home/ubuntu/BA_Project/log.txt'
+
+#retrieve loaded file count
+file_count = load_to_spark.filename.count(',') + 1
 
 def draw_histogram(df1, df2, df3):
     fig, axes = plt.subplots(nrows=2, ncols=2)
@@ -39,8 +43,13 @@ def number_of_revisions_per_article(df):
         .orderBy(desc("total revisions"))
     return df_total_revisions
 
-
+#get start time
+start_time = time.time()
+	
 df = load_to_spark.main_init_df()
+
+#retrieve spark worker count
+worker_count = load_to_spark.sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 
 print("Number of edits per authors per month:")
 df_author = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'),
@@ -77,6 +86,15 @@ print('Count variance = ', df_variance.count())
 df_authors_per_month_hist = df_authors_per_month.select(col("count")).alias("Edits of users per month")
 df_pages_per_month_hist = df_pages_per_month.select(col("count")).alias('Edits per month for each article')
 df_variance_hist = df_variance.select(col("variance")).alias('Variance overall statistics')
+
+#get end time
+end_time = time.time()
+
 draw_histogram(df_pages_per_month_hist, df_authors_per_month_hist, df_variance_hist)
+
+#calculate duration and write the application information to the log file
+duration = end_time - start_time
+file = open(logpath, 'a+')
+file.write(worker_count, file_count, duration)
 
 print('DONE')

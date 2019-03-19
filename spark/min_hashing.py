@@ -12,7 +12,10 @@ import matplotlib.pyplot as plt
 from pyspark_dist_explore import hist
 
 search_text = ['Bot', 'Bots']
+logpath = '/home/ubuntu/BA_Project/log.txt'
 
+#retrieve loaded file count
+file_count = load_to_spark.filename.count(',') + 1
 
 def draw_histogram(df):
     fig, axes = plt.subplots(nrows=2, ncols=2)
@@ -30,7 +33,13 @@ def sparse_vec(r):
     vals = [1.0 for x in range(l)]
     return r[0], Vectors.sparse(942000, li, vals)
 
+#get start time
+start_time = time.time()
+	
 df_gn = load_to_spark.main_init_df()
+
+#retrieve spark worker count
+worker_count = load_to_spark.sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 
 df_titles = df_gn.select("title", "author").where(col("author").isNotNull())
 
@@ -76,6 +85,14 @@ df_jacc_dist.show()
 
 df_hist = df_jacc_dist.select(col("JaccardDistance"))
 
+#get end time
+end_time = time.time()
+
 draw_histogram(df_hist)
+
+#calculate duration and write the application information to the log file
+duration = end_time - start_time
+file = open(logpath, 'a+')
+file.write(worker_count, file_count, duration)
 
 print('DONE')
