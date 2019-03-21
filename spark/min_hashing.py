@@ -16,7 +16,7 @@ search_text = ['Bot', 'Bots']
 logpath = '/home/ubuntu/BA_Project/log.txt'
 
 #retrieve loaded file count
-file_count = load_to_spark.filename.count(',') + 1
+file_count = len(load_to_spark.filename)
 
 def draw_histogram(df):
     fig, axes = plt.subplots(nrows=2, ncols=2)
@@ -94,6 +94,7 @@ draw_histogram(df_hist)
 #calculate duration and write the application information to the log file
 duration = end_time - start_time
 file = open(logpath, 'a+')
-file.write(worker_count + " " + file_count + " " + duration)
+output = '{} {} {}\n'.format(worker_count, file_count, duration)
+file.write(output)
 
 print('DONE')

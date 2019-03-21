@@ -13,7 +13,7 @@ search_text = ['Bot', 'Bots']
 logpath = '/home/ubuntu/BA_Project/log.txt'
 
 #retrieve loaded file count
-file_count = load_to_spark.filename.count(',') + 1
+file_count = len(load_to_spark.filename)
 
 # number of all authors per each article
 def number_of_authors_per_article(df):
@@ -91,6 +91,7 @@ draw_histogram(df_revision_length, df_number_of_edits_of_author)
 #calculate duration and write the application information to the log file
 duration = end_time - start_time
 file = open(logpath, 'a+')
-file.write(worker_count + " " + file_count + " " + duration)
+output = '{} {} {}\n'.format(worker_count, file_count, duration)
+file.write(output)
 
 print('DONE')

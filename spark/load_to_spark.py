@@ -4,8 +4,11 @@ from pyspark.sql.types import TimestampType
 from pyspark.sql.functions import from_unixtime, col, desc, explode
 
 #filename = '/scratch/wikipedia-dump/wikiJSON.json'
-#filename = '/scratch/wikipedia-dump/wiki_small_5.json'
-filename = '/scratch/wikipedia-dump/XML_JSON.json'
+#filename = ['/scratch/wikipedia-dump/wiki_small_1.json']
+#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json']
+#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json']
+filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json', '/scratch/wikipedia-dump/wiki_small_4.json']
+#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json', '/scratch/wikipedia-dump/wiki_small_4.json', '/scratch/wikipedia-dump/wiki_small_5.json']
 #filename = '/scratch/wikipedia-dump/wiki_small_old.json'
 
 sc = None
@@ -18,7 +21,7 @@ def create_dataframe(filename):
         .config("spark.executor.memory", "128g") \
         .getOrCreate()
     sc = spark.sparkContext
-    df = spark.read.load(filename, format="json")
+    df = spark.read.format("json").load(filename)
     return df
 
 
