@@ -16,13 +16,15 @@ public class DataLoader {
                 while((line = reader.readLine()) != null) {
                     int duration, cores;
                     long dataSize;
+                    String description;
                     String parts[] = line.split(" ");
 
                     cores = Integer.parseInt(parts[0]);
                     dataSize = Long.parseLong(parts[1]);
-                    duration = Integer.parseInt(parts[2]);
+                    duration = (int) Double.parseDouble(parts[2]);
+                    description = parts[3];
 
-                    appInformation.add(new AppInformation(duration, cores, dataSize));
+                    appInformation.add(new AppInformation(duration, cores, dataSize, description));
                 }
 
                 return appInformation;

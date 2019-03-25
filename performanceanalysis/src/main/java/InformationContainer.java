@@ -1,12 +1,10 @@
-
-
 import com.sun.deploy.ui.AppInfo;
 
 import java.util.ArrayList;
 
 public class InformationContainer {
 
-    public ArrayList<AppInformation>[] coreAvgPerDS;
+    public ArrayList<ArrayList<ArrayList<AppInformation>>> coreAvgPerDescDs;
 
     public InformationContainer(String filepath) {
 
@@ -15,50 +13,82 @@ public class InformationContainer {
     }
 
     private void loadInformation(String filepath) {
-        ArrayList<AppInformation> tmp = DataLoader.loadInformationFromFile(filepath);
-        calculateAvgs(tmp);
+
+        coreAvgPerDescDs = calculateAverages(orderByDatasize(orderByDescription(DataLoader.loadInformationFromFile(filepath))));
+
     }
 
-    private void calculateAvgs(ArrayList<AppInformation> info) {
+    private ArrayList<ArrayList<AppInformation>> orderByDescription(ArrayList<AppInformation> appInformation) {
 
-        ArrayList<Long> dataSizes = new ArrayList<Long>();
+        ArrayList<ArrayList<AppInformation>> orderedDescriptions = new ArrayList<ArrayList<AppInformation>>();
 
-        for(AppInformation appInfo : info) {
-            if(!dataSizes.contains(appInfo.getDataSize())) {
-                dataSizes.add(appInfo.getDataSize());
-            }
-        }
-
-        //create separate value list for each data size
-        ArrayList<AppInformation>[] orderedDSList = createLists(dataSizes.size());
-
-        //add the AppInformation objects to the corresponding data size
-        for(AppInformation appInfo : info) {
-            long dataSize = appInfo.getDataSize();
-            int i = 0;
-
-            for(Long l : dataSizes) {
-                if(l == dataSize) {
-                    i = dataSizes.indexOf(l);
+        for(AppInformation info : appInformation) {
+            int listIndex = -1;
+            for(int i = 0; i < orderedDescriptions.size(); i++) {
+                ArrayList<AppInformation> list = orderedDescriptions.get(i);
+                if(list.get(0).getDescription().equals(info.getDescription())) {
+                    listIndex = i;
                     break;
                 }
             }
 
-            orderedDSList[i].add(appInfo);
-        }
-
-        for(int i = 0; i < orderedDSList.length; i++) {
-            AppInformation[] orderedCores = orderByCores(orderedDSList[i].toArray(new AppInformation[orderedDSList[i].size()]));
-            orderedDSList[i] = calculateCoreAvg(orderedCores);
-        }
-
-        for(int i = 0; i < orderedDSList.length; i++) {
-            for(int j = 0; j < orderedDSList[i].size(); j++) {
-                System.out.println(orderedDSList[i].get(j).toString());
+            if(listIndex != -1) {
+                orderedDescriptions.get(listIndex).add(info);
+            } else {
+                orderedDescriptions.add(new ArrayList<AppInformation>());
+                orderedDescriptions.get(orderedDescriptions.size() - 1).add(info);
             }
         }
 
-        coreAvgPerDS = orderedDSList;
+        return orderedDescriptions;
+
+    }
+
+    private ArrayList<ArrayList<ArrayList<AppInformation>>> orderByDatasize(ArrayList<ArrayList<AppInformation>> appInformation) {
+
+        ArrayList<ArrayList<ArrayList<AppInformation>>> orderedDatasizes = new ArrayList<ArrayList<ArrayList<AppInformation>>>();
+
+        for(ArrayList<AppInformation> infoList : appInformation) {
+            orderedDatasizes.add(new ArrayList<ArrayList<AppInformation>>());
+
+            for(AppInformation val : infoList) {
+                int listIndex = -1;
+
+                for(int i = 0; i < orderedDatasizes.get(orderedDatasizes.size() - 1).size(); i++) {
+                    ArrayList<AppInformation> tmp = orderedDatasizes.get(orderedDatasizes.size() - 1).get(i);
+                    if(tmp.get(0).getDataSize() == val.getDataSize()) {
+                        listIndex = i;
+                        break;
+                    }
+                }
+
+                if(listIndex != -1) {
+                    orderedDatasizes.get(orderedDatasizes.size() - 1).get(listIndex).add(val);
+                } else {
+                    ArrayList<ArrayList<AppInformation>> tmp = orderedDatasizes.get(orderedDatasizes.size() - 1);
+                    tmp.add(new ArrayList<AppInformation>());
+                    tmp.get(tmp.size() - 1).add(val);
+                }
+            }
+        }
+
+        return orderedDatasizes;
+
+    }
+
+    private ArrayList<ArrayList<ArrayList<AppInformation>>> calculateAverages(ArrayList<ArrayList<ArrayList<AppInformation>>> orderedLists) {
+
+        ArrayList<ArrayList<ArrayList<AppInformation>>> avgs = new ArrayList<ArrayList<ArrayList<AppInformation>>>();
+
+        for(ArrayList<ArrayList<AppInformation>> dsLists : orderedLists) {
+            avgs.add(new ArrayList<ArrayList<AppInformation>>());
+
+            for(ArrayList<AppInformation> infoList : dsLists) {
+                avgs.get(avgs.size() - 1).add(calculateCoreAvg(infoList.toArray(new AppInformation[infoList.size()])));
+            }
+        }
+
+        return avgs;
 
     }
 
@@ -70,11 +100,6 @@ public class InformationContainer {
         for(int i = 0; i < obc.length; i++) {
             if(i == 0) {
                 lastCores = obc[i].getCores();
-            } else if (i == obc.length - 1) {
-                double avg = sum / (double) count;
-                AppInformation val = new AppInformation(-1, lastCores, obc[i].getDataSize());
-                val.setAvgTimeC(avg);
-                avgCoreInfo.add(val);
             }
 
             if(lastCores == obc[i].getCores()) {
@@ -82,7 +107,7 @@ public class InformationContainer {
                 count++;
             } else {
                 double avg = sum / (double) count;
-                AppInformation val = new AppInformation(-1, lastCores, obc[i].getDataSize());
+                AppInformation val = new AppInformation(-1, lastCores, obc[i].getDataSize(), obc[i].getDescription());
                 val.setAvgTimeC(avg);
                 avgCoreInfo.add(val);
 
@@ -90,36 +115,16 @@ public class InformationContainer {
                 sum = obc[i].getDuration();
                 count = 1;
             }
-        }
 
-        return avgCoreInfo;
-
-    }
-
-    private AppInformation[] orderByCores(AppInformation... info){
-
-        for(int i = 1; i < info.length; i++) {
-            for(int j = i; j > 0 && info[j].getCores() < info[j - 1].getCores(); j--) {
-                AppInformation tmp = info[j - 1];
-                info[j - 1] = info[j];
-                info[j] = tmp;
+            if (i == obc.length - 1) {
+                double avg = sum / (double) count;
+                AppInformation val = new AppInformation(-1, lastCores, obc[i].getDataSize(), obc[i].getDescription());
+                val.setAvgTimeC(avg);
+                avgCoreInfo.add(val);
             }
         }
 
-        return info;
-
-    }
-
-
-    private <T> ArrayList<T>[] createLists(int size) {
-
-        ArrayList<T>[] tmp = new ArrayList[size];
-
-        for(int i = 0; i < size; i++) {
-            tmp[i] = new ArrayList<T>();
-        }
-
-        return tmp;
+        return avgCoreInfo;
 
     }
 

@@ -3,31 +3,40 @@ import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class DataPlotter {
 
-    public static void plotInformation(InformationContainer container) {
+    public static void plotInformation(InformationContainer container, String... descriptions) {
 
-        XYChart chart = new XYChartBuilder().title("Core-Duration-Chart").xAxisTitle("#Cores").yAxisTitle("Duration").build();
+        for(String description : descriptions) {
+            XYChart chart = new XYChartBuilder().xAxisTitle("#Nodes").yAxisTitle("Duration").build();
 
-        for(ArrayList<AppInformation> infoList : container.coreAvgPerDS) {
-            double[] xValues = new double[infoList.size()];
-            double[] yValues = new double[infoList.size()];
-            String seriesName = " ";
+            for (ArrayList<ArrayList<AppInformation>> dsLists : container.coreAvgPerDescDs) {
+                if (dsLists.get(0).get(0).getDescription().equals(description)) {
+                    chart.setTitle(description);
+                    for (ArrayList<AppInformation> infoList : dsLists) {
+                        double[] xValues = new double[infoList.size()];
+                        double[] yValues = new double[infoList.size()];
+                        String seriesName = " ";
 
-            for(int i = 0; i < infoList.size(); i++) {
-                AppInformation info = infoList.get(i);
+                        for (int i = 0; i < infoList.size(); i++) {
+                            AppInformation info = infoList.get(i);
 
-                xValues[i] = info.getCores();
-                yValues[i] = info.getAvgTimeC();
+                            xValues[i] = info.getCores();
+                            yValues[i] = info.getAvgTimeC();
 
-                seriesName = "" + info.getDataSize();
+                            seriesName = "" + info.getDataSize();
+                        }
+
+                        chart.addSeries(seriesName, xValues, yValues);
+                    }
+                }
             }
 
-            chart.addSeries(seriesName, xValues, yValues);
+            new SwingWrapper(chart).displayChart();
         }
 
-        new SwingWrapper(chart).displayChart();
 
     }
 
@@ -43,7 +52,28 @@ public class DataPlotter {
         }
 
         InformationContainer container = new InformationContainer(path);
-        DataPlotter.plotInformation(container);
+        String[] descriptions = new String[container.coreAvgPerDescDs.size()];
+
+        for(int i = 0; i < container.coreAvgPerDescDs.size(); i++) {
+            ArrayList<ArrayList<AppInformation>> tmp = container.coreAvgPerDescDs.get(i);
+            descriptions[i] = tmp.get(0).get(0).getDescription();
+        }
+
+        System.out.println("Choose series to plot.");
+        System.out.println("Possible series: ");
+
+        for(int i = 0; i < descriptions.length; i++) {
+            System.out.println(descriptions[i]);
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        String line = scanner.nextLine();
+
+        String[] parts = line.split(" ");
+
+        DataPlotter.plotInformation(container, parts);
+
+        scanner.close();
 
     }
 
