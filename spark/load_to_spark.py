@@ -7,8 +7,8 @@ from pyspark.sql.functions import from_unixtime, col, desc, explode
 #filename = ['/scratch/wikipedia-dump/wiki_small_1.json']
 #filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json']
 #filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json']
-filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json', '/scratch/wikipedia-dump/wiki_small_4.json']
-#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json', '/scratch/wikipedia-dump/wiki_small_4.json', '/scratch/wikipedia-dump/wiki_small_5.json']
+#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json', '/scratch/wikipedia-dump/wiki_small_4.json']
+filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json', '/scratch/wikipedia-dump/wiki_small_4.json', '/scratch/wikipedia-dump/wiki_small_5.json']
 #filename = '/scratch/wikipedia-dump/wiki_small_old.json'
 
 sc = None
