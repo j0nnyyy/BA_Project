@@ -3,8 +3,8 @@
     <output-path>$PROJECT_DIR$/out/artifacts/performanceanalysis_jar</output-path>
     <root id="archive" name="performanceanalysis.jar">
       <element id="module-output" name="performanceanalysis" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/knowm/xchart/xchart/3.5.4/xchart-3.5.4.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/de/erichseifert/vectorgraphics2d/VectorGraphics2D/0.13/VectorGraphics2D-0.13.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/knowm/xchart/xchart/3.5.4/xchart-3.5.4.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
