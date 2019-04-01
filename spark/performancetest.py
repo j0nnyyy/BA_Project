@@ -3,20 +3,31 @@ from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
 from pyspark.sql.functions import desc, asc, format_string, col
 import time
-
-#filename = '/scratch/wikipedia-dump/wikiJSON.json'
-filename = ['/scratch/wikipedia-dump/wiki_small_1.json']
-#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json']
-#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json']
-#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json', '/scratch/wikipedia-dump/wiki_small_4.json']
-#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json', '/scratch/wikipedia-dump/wiki_small_4.json', '/scratch/wikipedia-dump/wiki_small_5.json']
+import argparse
 
 logpath = '/home/ubuntu/BA_Project/log.txt'
+base_path = '/scratch/wikipedia-dump/wiki_small_'
+f_big = '/scratch/wikipedia-dump/wikiJSON.json'
+
+filenames = []
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--filecount", help="sets the number of files that will be loaded")
+args = parser.parse_args()
+if args.filecount:
+    count = int(filecount)
+    for i in xrange(1, count + 1):
+        f_name = base_path + str(i) + '.json'
+        filenames.append(f_name)
+else:
+    #load only one file to prevent errors
+    f_name = base_path + '1.json'
+    filenames.append(f_name)
 
 sc = None
 df = None
 
-def load(filename)
+def load(filenames)
 	global sc
     spark = SparkSession \
         .builder \
@@ -24,7 +35,7 @@ def load(filename)
         .config("spark.executor.memory", "128g") \
         .getOrCreate()
     sc = spark.sparkContext
-    df = spark.read.load(filename, format="json")
+    df = spark.read.load(filenames, format="json")
     return df
 	
 def select(df):
@@ -47,9 +58,9 @@ def save_to_log(file_count, worker_count, duration, description):
 def test_load():
 	global df
 	start_time = time.time()
-	df = load(filename)
+	df = load(filenames)
 	end_time = time.time()
-	file_count = len(filename)
+	file_count = len(filenames)
 	worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 	duration = end_time - start_time
 	description = 'load'
@@ -60,7 +71,7 @@ def test_select():
 	start_time = time.time()
 	select(df)
 	end_time = time.time()
-	file_count = len(filename)
+	file_count = len(filenames)
 	worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 	duration = end_time - start_time
 	description = 'select'
@@ -71,7 +82,7 @@ def test_filter():
 	start_time = time.time()
 	filter(df)
 	end_time = time.time()
-	file_count = len(filename)
+	file_count = len(filenames)
 	worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 	duration = end_time - start_time
 	description = 'filter'
@@ -82,7 +93,7 @@ def test_groupby(df):
 	start_time = time.time()
 	filter(df)
 	end_time = time.time()
-	file_count = len(filename)
+	file_count = len(filenames)
 	worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 	duration = end_time - start_time
 	description = 'groupby'
@@ -93,7 +104,7 @@ def test_crossjoin(df1, df2):
 	start_time = time.time()
 	crossjoin(df1, df2)
 	end_time = time.time()
-	file_count = len(filename)
+	file_count = len(filenames)
 	worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 	duration = end_time - start_time
 	description = 'crossjoin'
@@ -107,6 +118,7 @@ test_select()
 test_filter()
 
 #prepare groupby data
+df2 = load
 df_monthly_ts = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))\
     .withColumn("yearmonth", col("yearmonth").cast("timestamp"))
 	
@@ -132,7 +144,8 @@ test_crossjoin(df_groups, df_formatted_ts)
 
 abs_end_time = time.time()
 abs_duration = abs_end_time - abs_start_time
-file_count = len(filename)
+file_count = len(filenames)
 worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 description = 'perftest'
 save_to_log(file_count, worker_count, abs_duration, description)
+    

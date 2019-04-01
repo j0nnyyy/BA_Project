@@ -10,16 +10,26 @@ import json
 import lxml.etree as etree
 from datetime import datetime
 import time
+import argparse
 
-#infile = 'C:\\Users\\fischpet\\Forschung\\playground\\enwiki-20180520-stub-meta-history1.xml.gz'
+infile = None
+outfile = None
 
-#infile_test = 'C:\\Users\\fischpet\\Forschung\\playground\\testxml1.xml'
+parser = argparse.ArgumentParser()
+parser.add_argument("--infile", help="input file")
+parser.add_argument("--outfile", help="output file")
+args = parser.parse_args()
+if args.infile:
+    infile = args.infile
+else:
+    print('missing input file')
+    exit()
 
-#infile = 'enwiki-20180520-stub-meta-history1.xml.gz'
-#infile = 'myXML.xml.gz'
-infile = 'testxml2.xml'
-
-json_filename = 'Big_XML.json'
+if args.outfile:
+    outfile = args.outfile
+else:
+    print('missing output file')
+    exit()
 
 skipped_tags = ['{http://www.mediawiki.org/xml/export-0.10/}format',
                 '{http://www.mediawiki.org/xml/export-0.10/}text',
@@ -88,7 +98,7 @@ def extract_localpart(qname):
 
 
 def save_to_json(data):
-    with open(json_filename, mode='a', encoding='utf-8') as json_file:
+    with open(outfile, mode='a', encoding='utf-8') as json_file:
         json.dump(data, json_file)
         json_file.write("\n")
 

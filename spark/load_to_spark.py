@@ -3,17 +3,29 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import TimestampType
 from pyspark.sql.functions import from_unixtime, col, desc, explode
 
-#filename = '/scratch/wikipedia-dump/wikiJSON.json'
-#filename = ['/scratch/wikipedia-dump/wiki_small_1.json']
-#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json']
-#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json']
-filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json', '/scratch/wikipedia-dump/wiki_small_4.json']
-#filename = ['/scratch/wikipedia-dump/wiki_small_1.json', '/scratch/wikipedia-dump/wiki_small_2.json', '/scratch/wikipedia-dump/wiki_small_3.json', '/scratch/wikipedia-dump/wiki_small_4.json', '/scratch/wikipedia-dump/wiki_small_5.json']
-#filename = '/scratch/wikipedia-dump/wiki_small_old.json'
+import argparse
+
+base_path = '/scratch/wikipedia-dump/wiki_small_'
+
+f_big = '/scratch/wikipedia-dump/wikiJSON.json'
 
 sc = None
+filenames = []
 
-def create_dataframe(filename):
+parser = argparse.ArgumentParser()
+parser.add_argument("--filecount", help="sets the number of files that will be loaded")
+args = parser.parse_args()
+if args.filecount:
+    count = int(filecount)
+    for i in xrange(1, count + 1):
+        f_name = base_path + str(i) + '.json'
+        filenames.append(f_name)
+else:
+    #load only one file to prevent errors
+    f_name = base_path + '1.json'
+    filenames.append(f_name)
+
+def create_dataframe(filenames):
     global sc
     spark = SparkSession \
         .builder \
@@ -21,7 +33,7 @@ def create_dataframe(filename):
         .config("spark.executor.memory", "128g") \
         .getOrCreate()
     sc = spark.sparkContext
-    df = spark.read.format("json").load(filename)
+    df = spark.read.format("json").load(filenames)
     return df
 
 
@@ -51,13 +63,13 @@ def test(df):
     return df_res
 
 def init():
-    return create_dataframe(filename)
+    return create_dataframe(filenames)
 
 
 def main_init_df():
-    df = create_dataframe(filename)
+    df = create_dataframe(filenames)
     return test(df)
 
 def main_init_df_test():
-    df = create_dataframe(filename)
+    df = create_dataframe(filenames)
     return test(df)
