@@ -4,13 +4,14 @@ import java.util.ArrayList;
 
 public class AppInformation {
 
-    private int cores;
+    private int workers, cores;
     private ArrayList<Double> durations = new ArrayList<>();
     private long dataSize;
     private String description;
 
-    public AppInformation(int cores, long dataSize, String description) {
+    public AppInformation(int workers, int cores, long dataSize, String description) {
 
+        this.workers = workers;
         this.cores = cores;
         this.dataSize = dataSize;
         this.description = description;
@@ -62,6 +63,10 @@ public class AppInformation {
 
     public ArrayList<Double> getDurations() {
         return durations;
+    }
+
+    public int getWorkers() {
+        return workers;
     }
 
     public int getCores() {

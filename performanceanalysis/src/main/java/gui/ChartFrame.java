@@ -16,6 +16,7 @@ public class ChartFrame extends JFrame {
 
     private InformationContainer container;
     private JPanel pInfo;
+    private JPanel pXAxis;
     private JPanel pFileCount;
     private JPanel pAggregation;
     private XChartPanel chart;
@@ -88,6 +89,17 @@ public class ChartFrame extends JFrame {
 
         return tmp;
 
+    }
+
+    private JPanel initXAxisPanel() {
+
+        JPanel tmp = new JPanel();
+        tmp.setLayout(new BoxLayout(tmp, BoxLayout.Y_AXIS));
+
+        tmp.add(new JLabel("Series:"));
+
+
+        return null;
     }
 
     private JPanel initOrUpdateFileCountPanel() {

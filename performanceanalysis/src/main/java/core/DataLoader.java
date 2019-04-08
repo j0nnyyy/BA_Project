@@ -16,22 +16,24 @@ public class DataLoader {
                 String line;
 
                 while((line = reader.readLine()) != null) {
-                    int cores;
+                    int workers, cores;
                     double duration;
                     long dataSize;
                     String description;
                     String parts[] = line.split(" ");
 
-                    cores = Integer.parseInt(parts[0]);
-                    dataSize = Long.parseLong(parts[1]);
-                    duration = Double.parseDouble(parts[2]);
-                    description = parts[3];
+                    workers = Integer.parseInt(parts[0]);
+                    cores = Integer.parseInt(parts[1]);
+                    dataSize = Long.parseLong(parts[2]);
+                    duration = Double.parseDouble(parts[3]);
+                    description = parts[4];
 
                     boolean found = false;
 
                     for(AppInformation info : appInformation) {
                         if(info.getDescription().equals(description)
                                 && info.getDataSize() == dataSize
+                                && info.getWorkers() == workers
                                 && info.getCores() == cores) {
                             found = true;
                             info.addDuration(duration);
@@ -39,7 +41,7 @@ public class DataLoader {
                     }
 
                     if(!found) {
-                        AppInformation info = new AppInformation(cores, dataSize, description);
+                        AppInformation info = new AppInformation(workers, cores, dataSize, description);
                         info.addDuration(duration);
                         appInformation.add(info);
                     }

@@ -1,5 +1,7 @@
 package core;
 
+import com.sun.deploy.ui.AppInfo;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -16,7 +18,8 @@ public class InformationContainer {
     private void loadInformation(String filepath) {
 
         ArrayList<ArrayList<AppInformation>> orderedDescriptions = orderByDescription(DataLoader.loadInformationFromFile(filepath));
-        ArrayList<ArrayList<ArrayList<AppInformation>>> orderedCores = new ArrayList<>();
+        ArrayList<ArrayList<ArrayList<AppInformation>>> orderedWorkers = new ArrayList<>();
+        ArrayList<ArrayList<ArrayList<ArrayList<AppInformation>>>> orderedCores = new ArrayList<>();
         descriptionList = new ArrayList<>();
 
         for(ArrayList<AppInformation> singleSeries : orderedDescriptions) {
@@ -26,12 +29,12 @@ public class InformationContainer {
         for(int i = 0; i < descriptionList.size(); i++) {
             ArrayList<ArrayList<AppInformation>> tmp = new ArrayList<>();
             for(int j = 0; j < descriptionList.get(i).size(); j++) {
-                tmp.add(orderByCores(descriptionList.get(i).get(j)));
+                tmp.add(orderByWorkers(descriptionList.get(i).get(j)));
             }
-            orderedCores.add(tmp);
+            orderedWorkers.add(tmp);
         }
 
-        descriptionList = orderedCores;
+        descriptionList = orderedWorkers;
 
     }
 
@@ -83,12 +86,12 @@ public class InformationContainer {
 
     }
 
-    private ArrayList<AppInformation> orderByCores(ArrayList<AppInformation> appInformation) {
+    private ArrayList<AppInformation> orderByWorkers(ArrayList<AppInformation> appInformation) {
 
         AppInformation[] infoArray = appInformation.toArray(new AppInformation[appInformation.size()]);
 
         for(int i = 1; i < infoArray.length; i++) {
-            for(int j = i; j > 0 && infoArray[j].getCores() < infoArray[j - 1].getCores(); j--) {
+            for(int j = i; j > 0 && infoArray[j].getWorkers() < infoArray[j - 1].getWorkers(); j--) {
                 AppInformation tmp = infoArray[j - 1];
                 infoArray[j - 1] = infoArray[j];
                 infoArray[j] = tmp;
@@ -170,7 +173,7 @@ public class InformationContainer {
             for(ArrayList<AppInformation> dsList : description) {
                 System.out.println(dsList.get(0).getDataSize());
                 for(AppInformation info : dsList) {
-                    System.out.println(info.getCores());
+                    System.out.println(info.getWorkers());
                 }
             }
         }
