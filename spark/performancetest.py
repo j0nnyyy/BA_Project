@@ -18,8 +18,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--filecount", help="sets the number of files that will be loaded")
 args = parser.parse_args()
 if args.filecount:
-    count = int(filecount)
-    for i in xrange(1, count + 1):
+    count = int(args.filecount)
+    for i in range(1, count + 1):
         f_name = base_path + str(i) + '.json'
         filenames.append(f_name)
 else:
@@ -30,13 +30,8 @@ else:
 sc = None
 df = None
 
-<<<<<<< HEAD
-def load(filenames)
-	global sc
-=======
-def load(filename):
+def load(filenames):
     global sc
->>>>>>> 62abfb73336aa731bf68e62f4fc9701acf4ebc43
     spark = SparkSession \
         .builder \
         .appName("Load") \
@@ -64,69 +59,11 @@ def save_to_log(file_count, worker_count, duration, description):
     file.write(output)
 
 def test_load():
-<<<<<<< HEAD
-	global df
-	start_time = time.time()
-	df = load(filenames)
-	end_time = time.time()
-	file_count = len(filenames)
-	worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-	duration = end_time - start_time
-	description = 'load'
-	save_to_log(file_count, worker_count, duration, description)
-	print('load test complete')
-
-def test_select():
-	start_time = time.time()
-	select(df)
-	end_time = time.time()
-	file_count = len(filenames)
-	worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-	duration = end_time - start_time
-	description = 'select'
-	save_to_log(file_count, worker_count, duration, description)
-	print('select test complete')
-	
-def test_filter():
-	start_time = time.time()
-	filter(df)
-	end_time = time.time()
-	file_count = len(filenames)
-	worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-	duration = end_time - start_time
-	description = 'filter'
-	save_to_log(file_count, worker_count, duration, description)
-	print('filter test complete')
-
-def test_groupby(df):
-	start_time = time.time()
-	filter(df)
-	end_time = time.time()
-	file_count = len(filenames)
-	worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-	duration = end_time - start_time
-	description = 'groupby'
-	save_to_log(file_count, worker_count, duration, description)
-	print('groupby test complete')
-	
-def test_crossjoin(df1, df2):
-	start_time = time.time()
-	crossjoin(df1, df2)
-	end_time = time.time()
-	file_count = len(filenames)
-	worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-	duration = end_time - start_time
-	description = 'crossjoin'
-	save_to_log(file_count, worker_count, duration, description)
-	print('groupby test complete')
-	
-abs_start_time = time.time()	
-=======
     global df
     start_time = time.time()
-    df = load(filename)
+    df = load(filenames)
     end_time = time.time()
-    file_count = len(filename)
+    file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
     duration = end_time - start_time
     description = 'load'
@@ -137,7 +74,7 @@ def test_select():
     start_time = time.time()
     select(df)
     end_time = time.time()
-    file_count = len(filename)
+    file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
     duration = end_time - start_time
     description = 'select'
@@ -148,7 +85,7 @@ def test_filter():
     start_time = time.time()
     filter(df)
     end_time = time.time()
-    file_count = len(filename)
+    file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
     duration = end_time - start_time
     description = 'filter'
@@ -159,7 +96,7 @@ def test_groupby(df):
     start_time = time.time()
     filter(df)
     end_time = time.time()
-    file_count = len(filename)
+    file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
     duration = end_time - start_time
     description = 'groupby'
@@ -170,7 +107,7 @@ def test_crossjoin(df1, df2):
     start_time = time.time()
     crossjoin(df1, df2)
     end_time = time.time()
-    file_count = len(filename)
+    file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
     duration = end_time - start_time
     description = 'crossjoin'
@@ -178,20 +115,13 @@ def test_crossjoin(df1, df2):
     print('groupby test complete')
 
 abs_start_time = time.time()
->>>>>>> 62abfb73336aa731bf68e62f4fc9701acf4ebc43
-
 test_load()
 test_select()
 test_filter()
 
 #prepare groupby data
-<<<<<<< HEAD
-df2 = load
-df_monthly_ts = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))\
-=======
 df2 = load_to_spark.main_init_df()
 df_monthly_ts = df2.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))\
->>>>>>> 62abfb73336aa731bf68e62f4fc9701acf4ebc43
     .withColumn("yearmonth", col("yearmonth").cast("timestamp"))
 
 test_groupby(df_monthly_ts)
@@ -226,7 +156,3 @@ file_count = len(filenames)
 worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 description = 'perftest'
 save_to_log(file_count, worker_count, abs_duration, description)
-<<<<<<< HEAD
-    
-=======
->>>>>>> 62abfb73336aa731bf68e62f4fc9701acf4ebc43

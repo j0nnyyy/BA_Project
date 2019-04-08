@@ -16,8 +16,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--filecount", help="sets the number of files that will be loaded")
 args = parser.parse_args()
 if args.filecount:
-    count = int(filecount)
-    for i in xrange(1, count + 1):
+    count = int(args.filecount)
+    for i in range(1, count + 1):
         f_name = base_path + str(i) + '.json'
         filenames.append(f_name)
 else:
