@@ -95,8 +95,10 @@ public class AuthorSimilarity {
 
         df = spark.read().schema(schema).json(fileNames.toArray(new String[fileNames.size()]));
         df = df.withColumn("revision", explode(col("revision")))
-                .select(col("title"), col("revision").getField("contributor").getField("username").alias("author"));
+                .select(col("title"), col("revision").getField("contributor").getField("username").alias("author"))
+                .distinct();
         df =  df.where(col("author").isNotNull());
+        df.cache();
 
         df = df.sample(false, 10000.0 / df.count(), System.currentTimeMillis());
         System.out.println("count: " + df.count());

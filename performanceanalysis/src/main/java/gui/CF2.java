@@ -444,7 +444,7 @@ public class CF2 extends JFrame {
 
     public static void main(String[] args) {
 
-        EventQueue.invokeLater(() -> new CF2(1000, 600, "C:/Users/Jonas/Desktop/newlog.txt"));
+        EventQueue.invokeLater(() -> new CF2(1000, 600, "C:/Users/Jonas Seitz/Desktop/perf_log.txt"));
 
     }
 

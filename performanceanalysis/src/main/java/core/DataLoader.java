@@ -16,6 +16,9 @@ public class DataLoader {
                 String line;
 
                 while((line = reader.readLine()) != null) {
+                    if(line.startsWith("#"))
+                        continue;
+
                     int workers, cores;
                     double duration;
                     long dataSize;

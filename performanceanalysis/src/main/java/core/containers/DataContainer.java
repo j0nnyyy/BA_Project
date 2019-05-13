@@ -4,8 +4,9 @@ import core.AppInformation;
 import core.DataLoader;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class DataContainer {
+public class DataContainer implements Iterable<DescriptionContainer> {
 
     private static DataContainer instance;
     private ArrayList<DescriptionContainer> descriptionContainers;
@@ -349,6 +350,21 @@ public class DataContainer {
 
     }
 
+    public ArrayList<AppInformation> getSameWorkersAsFiles(String description) {
+
+        ArrayList<AppInformation> infoList = new ArrayList<>();
+
+        for(int i = 0; i < 20; i++) {
+            AppInformation info = getInformation(description, i, i, 16);
+            if(info != null) {
+                infoList.add(info);
+            }
+        }
+
+        return infoList;
+
+    }
+
     public static void main(String[] args) {
 
         DataContainer container = DataContainer.instance();
@@ -357,4 +373,8 @@ public class DataContainer {
 
     }
 
+    @Override
+    public Iterator<DescriptionContainer> iterator() {
+        return descriptionContainers.iterator();
+    }
 }
