@@ -1,6 +1,7 @@
 from pyspark.sql.functions import col, window
 from pyspark_dist_explore import hist
 import matplotlib.pyplot as plt
+import hotspot_detection
 import load_to_spark
 import argparse
 
@@ -42,25 +43,6 @@ def init_df():
     print(df.count())
     return df
 
-def create_windows(df):
-    df_windowed = df.groupBy(col("title"), window("timestamp", window_size + " weeks")).count()
-    return df_windowed
-
-def create_averages(df):
-    df_avg = df.groupBy(col("title")).avg()
-    return df_avg
-
-def join_by_column(df1, df2, column):
-    df1 = df1.withColumn(column + "1", col(column)).drop(col(column))
-    df2 = df2.withColumn(column + "2", col(column)).drop(col(column))
-    df_joined = df1.join(df2, col(column + "1") == col(column + "2")).select("*", col(column + "1").alias(column))\
-        .drop(column + "1", column + "2")
-    return df_joined
-
-def select_hotspots(df, multiplier):
-    df = df.where(col("count") > (multiplier * col("avg(count)")))
-    return df
-
 def df_with_authors(df1, df2):
     df1 = df1.select("author", "timestamp", col("title").alias("title1"))
     df2 = df2.select("window", "count", "avg(count)", col("title").alias("title2"))
@@ -87,10 +69,7 @@ def draw_histogram(df):
     plt.savefig("/scratch/wikipedia-dump/plots/hotspots/hotspot_author_percentage.png")
 
 df = init_df()
-df_windowed = create_windows(df)
-df_avg = create_averages(df_windowed)
-df_joined = join_by_column(df_windowed, df_avg, "title")
-df_hotspots = select_hotspots(df_joined, multiplier)
+df_hotspots = hotspot_detection.single_revision_hotspots_by_time(df, weeks_per_bin=4, multiplier=4)
 df_hotspots.show()
 print(df_hotspots.count())
 
