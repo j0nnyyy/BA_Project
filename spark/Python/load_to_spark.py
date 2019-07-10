@@ -1,6 +1,6 @@
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
-from pyspark.sql.types import TimestampType, StructType, StructField, StringType, ArrayType
+from pyspark.sql.types import TimestampType, StructType, StructField, StringType, ArrayType, TimestampType
 from pyspark.sql.functions import from_unixtime, col, desc, explode
 
 import argparse
@@ -17,7 +17,7 @@ schema = StructType([StructField("id",StringType(),True),StructField("revision",
     ArrayType(StructType([StructField("comment",StringType(),True),StructField("contributor", \
     StructType([StructField("id",StringType(),True),StructField("ip",StringType(),True), \
     StructField("username",StringType(),True)]),True),StructField("id",StringType(),True), \
-    StructField("parentid",StringType(),True),StructField("timestamp",StringType(),True)]),True), \
+    StructField("parentid",StringType(),True),StructField("timestamp",TimestampType(),True)]),True), \
     True),StructField("title",StringType(),True)])
 
 def create_session():
@@ -55,3 +55,12 @@ def init(filenames):
 def main_init_df(filenames):
     df = create_dataframe(filenames)
     return extract_df_from_revisions(df)
+
+def init_article_hotspot_df(filenames):
+    df = create_dataframe(filenames)
+    df = df.withColumn("revision", explode("revision"))\
+        .select(col("revision")["id"].alias("revID"),
+                col("revision")["contributor"]["username"].alias("author"),
+                col("revision")["timestamp"].alias("timestamp"),
+                col("title"))
+    return df

@@ -1,6 +1,7 @@
 #!/bin/sh
 num=1
-pyscript="/home/ubuntu/BA_Project/spark/Python/cross_hash_difference.py"
+authorscript="/home/ubuntu/BA_Project/spark/Python/author_similarity.py"
+articlescript="/home/ubuntu/BA_Project/spark/Python/article_similarity.py"
 dependencies="/home/ubuntu/BA_Project/spark/Python/jaccard_similarity.py"
 
 while [ $num -le 26 ]

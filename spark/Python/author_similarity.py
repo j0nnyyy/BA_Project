@@ -11,7 +11,12 @@ import jaccard_similarity
 import argparse
 import time
 
-filenames = ['/scratch/wikipedia-dump/wiki_small_1.json']
+base_path = '/scratch/wikipedia-dump/wiki_small_'
+logpath = '/home/ubuntu/BA_Project/log/jaccard_log.txt'
+crosspath = '/scratch/wikipedia-dump/plots/jaccard/author_distance_cross/'
+hashpath = '/scratch/wikipedia-dump/plots/jaccard/author_distance_hash/'
+
+filenames = []
 bot_names = ['Bot', 'Bots']
 schema = StructType([StructField("id",StringType(),True),StructField("revision", \
     ArrayType(StructType([StructField("comment",StringType(),True),StructField("contributor", \
@@ -19,31 +24,46 @@ schema = StructType([StructField("id",StringType(),True),StructField("revision",
     StructField("username",StringType(),True)]),True),StructField("id",StringType(),True), \
     StructField("parentid",StringType(),True),StructField("timestamp",StringType(),True)]),True), \
     True),StructField("title",StringType(),True)])
-mode = 'sim'
+mode = 'dist'
 jaccard_method = 'cross'
 minval = 0.0
 maxval = 1.0
 activity = "all"
 
-def sparse_vec(r, count):
-    list = set(r[1])
-    list = sorted(list)
-    length = len(list)
-    ones = [1.0 for i in range(length)]
-    return r[0], Vectors.sparse(count, list, ones)
-
 def draw_histogram(df, jaccard_method):
-    global plotpath
-    global mode
     fig, axes = plt.subplots()
     fig.set_size_inches(20, 20)
-    hist(axes[0, 0], [df], bins=20, color=['red'])
-    axes[0, 0].set_xlabel('Jaccard Koeffizient')
-    axes[0, 0].set_ylabel('Anzahl der Autoren')
-    plt.savefig('Jaccard_Similarity')
+    hist(axes, [df], bins=20, color=['red'])
+    if mode == 'sim':
+    	axes.set_xlabel('Jaccard Ähnlichkeit')
+    else:
+        axes.set_xlabel('Jaccard Distanz')
+    axes.set_ylabel('Anzahl der Autoren')
+    if len(filenames) == 1:
+        name_len = len(filenames[0])
+        if name_len == len(base_path) + 6:
+            file_no = filenames[0][len(base_path):len(base_path) + 1]
+        elif name_len == len(base_path) + 7:
+            file_no = filenames[0][len(base_path):len(base_path) + 2]
+        else:
+            print("Error while plotting: filenumber")
+            return
+        suffix = "author_" + mode + '_' + jaccard_method + '_f_' + file_no + '.png'
+    else:
+        suffix = "author_" + mode + '_' + jaccard_method + '_' + str(len(filenames)) + '_files.png'
 
-    
-df = load_to_spark.main_init_df()
+    if jaccard_method == "cross":
+        path = crosspath + suffix
+    elif jaccard_method == "hash":
+        path = hashpath + suffix
+
+    plt.savefig(path)
+
+def save_to_log(workers, files, duration, description):
+    file = open(logpath, '+a')
+    output = '{} {} {} {} {}\n'.format(workers, 16, files, duration, description)
+    file.write(output)
+    file.close()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--filecount", help="sets the number of files that will be loaded")
@@ -91,7 +111,7 @@ if activity == "inactive":
 #select random authors
 print("Selecting sample")
 count = df_t_user.count() #count 1
-df_t_user = df_t_user.sample(False, fraction= 10000.0 / count, seed=int(round(time.time() * 1000)))
+df_t_user = df_t_user.sample(False, fraction= 20000.0 / count, seed=int(round(time.time() * 1000)))
 df_t_user.cache()
 print(df_t_user.count()) #count 2
 
@@ -104,33 +124,25 @@ df_jacc_dist.show()
 if jaccard_method == 'cross':
     print("Calculating jaccard using crossjoin")
     #calculate with crossjoin
-    df_jaccard = jaccard_similarity.jaccard_with_crossjoin(df_t_user, "author", "title", mode=mode, jaccard_method="cross", maxval=0.9)
-    print("Drawing Jaccard")
-    df_hist = df_jaccard.select("jaccard").where((col("jaccard") >= minval) & (col("jaccard") <= maxval))
+    df_hist = jaccard_similarity.jaccard_with_crossjoin(df_t_user, "author", "title", mode=mode, minval=minval, maxval=maxval).select(col("jaccard"))
     print("Hist count", df_hist.count())
     draw_histogram(df_hist, "cross")
 elif jaccard_method == 'hash':
     print("Calculating jaccard using min hashing")
     #calculate with min-hashing
-    df_jaccard = jaccard_similarity.jaccard_with_min_hashing(df_t_user, "author", "title", mode=mode, jaccard_method="hash", maxval=0.9)
-    print("Drawing Jaccard")
-    df_hist = df_jaccard.select("jaccard").where((col("jaccard") >= minval) & (col("jaccard") <= maxval))
+    df_hist = jaccard_similarity.jaccard_with_min_hashing(df_t_user, "author", "title", mode=mode, minval=minval, maxval=maxval).select(col("jaccard"))
     print("Hist count", df_hist.count())
     draw_histogram(df_hist, "hash")
 elif jaccard_method == 'both':
     print("Calculating jaccard using both methods")
     #calculate with crossjoin
-    df_jaccard = jaccard_similarity.jaccard_with_crossjoin(df_t_user, "author", "title", mode=mode, jaccard_method="cross", maxval=0.9)
+    df_hist = jaccard_similarity.jaccard_with_crossjoin(df_t_user, "author", "title", mode=mode, minval=minval, maxval=maxval).select(col("jaccard"))
     #draw histogram
-    print("Drawing Jaccard")
-    df_hist = df_jaccard.select("jaccard").where((col("jaccard") >= minval) & (col("jaccard") <= maxval))
     print("Hist count", df_hist.count())
     draw_histogram(df_hist, "cross")
     #calculate with min-hashing
-    df_jaccard = jaccard_similarity.jaccard_with_min_hashing(df_t_user, "author", "title", mode=mode, jaccard_method="cross", maxval=0.9)
+    df_hist = jaccard_similarity.jaccard_with_min_hashing(df_t_user, "author", "title", mode=mode, minval=minval, maxval=maxval).select(col("jaccard"))
     #draw histogram
-    print("Drawing Jaccard")
-    df_hist = df_jaccard.select("jaccard").where((col("jaccard") >= minval) & (col("jaccard") <= maxval))
     print("Hist count", df_hist.count())
     draw_histogram(df_hist, "hash")
 else:

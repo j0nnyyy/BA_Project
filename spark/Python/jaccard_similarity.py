@@ -97,7 +97,7 @@ def jaccard_with_min_hashing(df_t_user, to_compare, regarding, mode="dist", minv
     #create binary vectors
     print("Creating vectors")
     count = df_regarding.count() + 10
-    max_index = int(df_regarding.select(col("id")).orderBy(desc("id")).first()["id"])
+    max_index = int(df_regarding.select(col("id")).orderBy(desc("id")).first()["id"]) + 10
     size = max(count, max_index)
     df_joined = df_joined.rdd.map(lambda r: (r[to_compare], float(r['id']))).groupByKey().map(lambda r: sparse_vec(r, size)).toDF()
     print("df_joined", df_joined.count())

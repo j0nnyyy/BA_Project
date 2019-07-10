@@ -13,14 +13,12 @@ mode = "dist"
 jaccmethod = "cross"
 
 def draw_histogram(df):
-    global plotpath
-    global mode
     fig, axes = plt.subplots()
     fig.set_size_inches(20, 20)
     hist(axes, [df], bins=50, color=['red'])
     axes.set_xlabel("Unterschied der Bearbeitungsdaten in Tagen")
     axes.set_ylabel('Anzahl der Autoren')
-    plotpath = "/home/ubuntu/date_diff_similar_authors.png"
+    plotpath = "/scratch/wikipedia-dump/plots/jaccard/date_diff_similar_authors.png"
     plt.savefig(plotpath)
 
 parser = argparse.ArgumentParser()

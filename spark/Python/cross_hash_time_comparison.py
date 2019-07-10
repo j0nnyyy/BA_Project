@@ -44,7 +44,9 @@ end_hash = time.time()
 
 file = open(logpath, "+a")
 #workers, samples, crosstime, hashtime
-output = "{} {} {} {}\n".format(6, samples, end_cross - start_cross, end_hash - start_hash)
+output = "{} {} {} {} {}\n".format(6, 16, samples, end_cross - start_cross, "cross")
+file.write(output)
+output = "{} {} {} {} {}\n".format(6, 16, samples, end_hash - start_hash, "hash")
 file.write(output)
 file.close()
 print("Done")
