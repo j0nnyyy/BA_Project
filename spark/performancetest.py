@@ -1,7 +1,10 @@
+
 from pyspark import SparkContext
+from pyspark.sql.functions import min as min_, max as max_
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
-from pyspark.sql.functions import desc, asc, format_string, col
+from pyspark.sql.functions import desc, asc, format_string, col, length
+import load_to_spark
 import time
 import argparse
 
@@ -27,8 +30,13 @@ else:
 sc = None
 df = None
 
+<<<<<<< HEAD
 def load(filenames)
 	global sc
+=======
+def load(filename):
+    global sc
+>>>>>>> 62abfb73336aa731bf68e62f4fc9701acf4ebc43
     spark = SparkSession \
         .builder \
         .appName("Load") \
@@ -37,25 +45,26 @@ def load(filenames)
     sc = spark.sparkContext
     df = spark.read.load(filenames, format="json")
     return df
-	
+
 def select(df):
-	df.select("title")
-	
+    df.select("title")
+
 def filter(df):
-	df.filter(length(df.title) > 15)
-	
+    df.filter(length(df.title) > 15)
+
 def groupBy(df):
-	df.groupby(
-	
+    df.groupby("yearmonth", "title")
+
 def crossjoin(df1, df2):
-	df1.crossJoin(df2)
-	
+    df1.crossJoin(df2)
+
 def save_to_log(file_count, worker_count, duration, description):
-	file = open(logpath, 'a+')
-	output = '{} {} {} {}\n'.format(worker_count, file_count, duration, description)
-	file.write(output)
+    file = open(logpath, 'a+')
+    output = '{} {} {} {}\n'.format(worker_count, file_count, duration, description)
+    file.write(output)
 
 def test_load():
+<<<<<<< HEAD
 	global df
 	start_time = time.time()
 	df = load(filenames)
@@ -112,22 +121,91 @@ def test_crossjoin(df1, df2):
 	print('groupby test complete')
 	
 abs_start_time = time.time()	
+=======
+    global df
+    start_time = time.time()
+    df = load(filename)
+    end_time = time.time()
+    file_count = len(filename)
+    worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
+    duration = end_time - start_time
+    description = 'load'
+    save_to_log(file_count, worker_count, duration, description)
+    print('load test complete')
+
+def test_select():
+    start_time = time.time()
+    select(df)
+    end_time = time.time()
+    file_count = len(filename)
+    worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
+    duration = end_time - start_time
+    description = 'select'
+    save_to_log(file_count, worker_count, duration, description)
+    print('select test complete')
+
+def test_filter():
+    start_time = time.time()
+    filter(df)
+    end_time = time.time()
+    file_count = len(filename)
+    worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
+    duration = end_time - start_time
+    description = 'filter'
+    save_to_log(file_count, worker_count, duration, description)
+    print('filter test complete')
+
+def test_groupby(df):
+    start_time = time.time()
+    filter(df)
+    end_time = time.time()
+    file_count = len(filename)
+    worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
+    duration = end_time - start_time
+    description = 'groupby'
+    save_to_log(file_count, worker_count, duration, description)
+    print('groupby test complete')
+
+def test_crossjoin(df1, df2):
+    start_time = time.time()
+    crossjoin(df1, df2)
+    end_time = time.time()
+    file_count = len(filename)
+    worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
+    duration = end_time - start_time
+    description = 'crossjoin'
+    save_to_log(file_count, worker_count, duration, description)
+    print('groupby test complete')
+
+abs_start_time = time.time()
+>>>>>>> 62abfb73336aa731bf68e62f4fc9701acf4ebc43
 
 test_load()
 test_select()
 test_filter()
 
 #prepare groupby data
+<<<<<<< HEAD
 df2 = load
 df_monthly_ts = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))\
+=======
+df2 = load_to_spark.main_init_df()
+df_monthly_ts = df2.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))\
+>>>>>>> 62abfb73336aa731bf68e62f4fc9701acf4ebc43
     .withColumn("yearmonth", col("yearmonth").cast("timestamp"))
-	
+
 test_groupby(df_monthly_ts)
 
 #prepare crossjoin data
+spark = SparkSession \
+    .builder \
+    .appName("Python Spark SQL basic example") \
+    .config("spark.executor.memory", "128g") \
+    .getOrCreate()
+df_gn = load_to_spark.init()
 df_monthly_ts = df_monthly_ts.groupBy("yearmonth", "title").count().orderBy(desc("count"))
-df = df.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))
-df_monthly = df.groupBy("yearmonth", "title").count().orderBy(desc("count"))
+df2 = df2.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))
+df_monthly = df2.groupBy("yearmonth", "title").count().orderBy(desc("count"))
 min_date, max_date = df_monthly_ts.select(min_("yearmonth").cast("long"), max_("yearmonth").cast("long")).first()
 data = [(min_date, max_date)]
 df_dates = spark.createDataFrame(data, ["minDate", "maxDate"])
@@ -148,4 +226,7 @@ file_count = len(filenames)
 worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 description = 'perftest'
 save_to_log(file_count, worker_count, abs_duration, description)
+<<<<<<< HEAD
     
+=======
+>>>>>>> 62abfb73336aa731bf68e62f4fc9701acf4ebc43

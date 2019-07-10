@@ -1,3 +1,5 @@
+package core;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -14,22 +16,36 @@ public class DataLoader {
                 String line;
 
                 while((line = reader.readLine()) != null) {
-                    int duration, cores;
+                    int cores;
+                    double duration;
                     long dataSize;
                     String description;
                     String parts[] = line.split(" ");
 
                     cores = Integer.parseInt(parts[0]);
                     dataSize = Long.parseLong(parts[1]);
-                    duration = (int) Double.parseDouble(parts[2]);
+                    duration = Double.parseDouble(parts[2]);
                     description = parts[3];
 
-                    appInformation.add(new AppInformation(duration, cores, dataSize, description));
+                    boolean found = false;
+
+                    for(AppInformation info : appInformation) {
+                        if(info.getDescription().equals(description)
+                                && info.getDataSize() == dataSize
+                                && info.getCores() == cores) {
+                            found = true;
+                            info.addDuration(duration);
+                        }
+                    }
+
+                    if(!found) {
+                        AppInformation info = new AppInformation(cores, dataSize, description);
+                        info.addDuration(duration);
+                        appInformation.add(info);
+                    }
                 }
 
                 return appInformation;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
