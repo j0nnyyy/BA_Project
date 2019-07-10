@@ -65,9 +65,9 @@ df_ratio.show()
 
 authors_per_hotspot(df_ratio, df_author)
 
-#revisions_per_author(df_ratio, df_author)
+revisions_per_author(df_ratio, df_author)
 
-#df_hist = df_ratio.select(col("ratio"))
-#draw_hist(df_hist, "Verhältnis von Autoren zur Anzahl der Revisionen in Hotpots", "Anzahl der Werte", "/scratch/wikipedia-dump/plots/hotspots/hotspot_author_ratio_sliding.png")
+df_hist = df_ratio.select(col("ratio"))
+draw_hist(df_hist, "Verhältnis von Autoren zur Anzahl der Revisionen in Hotpots", "Anzahl der Werte", "/scratch/wikipedia-dump/plots/hotspots/hotspot_author_ratio_sliding.png")
 
-#author_revision_per_hotspot(df_joined)
+author_revision_per_hotspot(df_joined)

@@ -54,4 +54,4 @@ df_hist = df_grouped.select(col("count"))
 df_hist = df_hist.where(col("count") < 10000)
 draw_histogram(df_hist, "Vorkommen in Artikelhotspots", "Anzahl der Autoren", "/scratch/wikipedia-dump/plots/hotspots/author_occurrences_per_hotspot.png")
 
-#different_articles_per_author(df_joined)
+different_articles_per_author(df_joined)

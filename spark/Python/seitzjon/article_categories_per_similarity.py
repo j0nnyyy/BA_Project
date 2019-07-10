@@ -61,37 +61,7 @@ else:
 
 df_categories = load_to_spark.create_category_df(category_file)
 df = load_to_spark.main_init_df(filenames)
-#df = load_to_spark.get_samples(filenames, 100000)
 df.cache()
-'''
-load_to_spark.create_session()
-df = load_to_spark.sc.parallelize([
-    Row(author="A", title="X", id="1"),
-    Row(author="B", title="X", id="1"),
-    Row(author="C", title="X", id="1"),
-    Row(author="A", title="Y", id="2"),
-    Row(author="B", title="Y", id="2"),
-    Row(author="B", title="Y", id="2"),
-    Row(author="C", title="Y", id="2"),
-    Row(author="A", title="Z", id="3"),
-    Row(author="A", title="Z", id="3"),
-    Row(author="B", title="Z", id="3"),
-    Row(author="D", title="U", id="4")
-]).toDF()
-
-df_categories = load_to_spark.sc.parallelize([
-    Row(id="1", category="P"),
-    Row(id="1", category="Q"),
-    Row(id="1", category="R"),
-    Row(id="1", category="S"),
-    Row(id="2", category="P"),
-    Row(id="2", category="Q"),
-    Row(id="2", category="R"),
-    Row(id="3", category="P"),
-    Row(id="3", category="Q"),
-    Row(id="4", category="T")
-]).toDF()
-'''
 
 #remove bots
 df = df.where(col("author").isNotNull())

@@ -9,12 +9,10 @@ import argparse
 base_path = "/scratch/wikipedia-dump/wiki_small_"
 bots = ["Bot", "Bots"]
 filenames = []
-to_compare = "title"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--filenumber")
 parser.add_argument("--filecount")
-parser.add_argument("--compare")
 args = parser.parse_args()
 
 if args.filecount:
@@ -30,9 +28,6 @@ elif args.filenumber:
     filenames.append(base_path + args.filenumber + ".json")
 else:
     filenames.append(base_path + "1.json")
-
-if args.compare:
-    to_compare = args.compare
 
 def init_df():
     df = load_to_spark.init_article_hotspot_df(filenames)
@@ -57,7 +52,7 @@ def draw_histogram(df):
 
 df = init_df()
 df_category = init_category_df(df)
-df_hotspots = hotspot_detection.sliding_window_hotspots_by_time(df, type=to_compare).select("window", "title")
+df_hotspots = hotspot_detection.sliding_window_hotspots_by_time(df, type="title").select("window", "title")
 df_hotspots.cache()
 df_hotspots.show()
 

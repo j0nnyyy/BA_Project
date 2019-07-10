@@ -47,12 +47,12 @@ df_joined = df.join(df_authors, col("author") == col("author1"))\
     .select(col("author"), col("title")).distinct()
 df_joined.groupBy(col("author")).count()\
     .select(avg(col("count"))).show()
-#print("Calculating different avg")
-#df_different = df_jaccard.where(col("jaccard") > 0.7)
-#df_joined = df.join(df_different, (col("author") == col("author1")) | (col("author") == col("author2")))\
-#    .select(col("author"), col("title")).distinct()
-#df_joined.groupBy(col("author")).count()\
-#    .select(avg(col("count"))).show()
+print("Calculating different avg")
+df_different = df_jaccard.where(col("jaccard") > 0.7)
+df_joined = df.join(df_different, (col("author") == col("author1")) | (col("author") == col("author2")))\
+    .select(col("author"), col("title")).distinct()
+df_joined.groupBy(col("author")).count()\
+    .select(avg(col("count"))).show()
 print("Calculating rest avg")
 df_rest = df_jaccard.where((col("jaccard") >= 0.3) & (col("jaccard") <= 0.7))
 df_authors = df_rest.select(col("author1"))\
@@ -61,10 +61,10 @@ df_joined = df.join(df_authors, col("author") == col("author1"))\
     .select(col("author"), col("title")).distinct()
 df_joined.groupBy(col("author")).count()\
     .select(avg(col("count"))).show()
-#df_jacc_authors = df_jaccard.select(col("author1").alias("author"))\
-#    .union(df_jaccard.select(col("author2").alias("author")).distinct())
-#df_all_authors = df.select(col("author")).distinct()
-#df_rest = df_all_authors.subtract(df_jacc_authors)
-#df_rest = df_rest.select(col("author").alias("author1"))
-#df_joined = df.join(df_rest, col("author") == col("author1")).select("author", "title").distinct()
-#df_joined.groupBy(col("author")).count().select(avg(col("count"))).show()
+df_jacc_authors = df_jaccard.select(col("author1").alias("author"))\
+    .union(df_jaccard.select(col("author2").alias("author")).distinct())
+df_all_authors = df.select(col("author")).distinct()
+df_rest = df_all_authors.subtract(df_jacc_authors)
+df_rest = df_rest.select(col("author").alias("author1"))
+df_joined = df.join(df_rest, col("author") == col("author1")).select("author", "title").distinct()
+df_joined.groupBy(col("author")).count().select(avg(col("count"))).show()

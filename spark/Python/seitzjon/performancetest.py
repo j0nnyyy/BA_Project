@@ -111,7 +111,7 @@ def test_select():
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 #    save_to_log(file_count, worker_count, dur1, 'select')
-#    save_to_log(file_count, worker_count, dur2, 'select_count')
+    save_to_log(file_count, worker_count, dur2, 'select_count')
     print('select test complete')
 
 def test_filter():
@@ -119,7 +119,7 @@ def test_filter():
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 #    save_to_log(file_count, worker_count, dur1, 'filter')
-#    save_to_log(file_count, worker_count, dur2, 'filter_count')
+    save_to_log(file_count, worker_count, dur2, 'filter_count')
     print('filter test complete')
 
 def test_groupby(df):
@@ -142,8 +142,8 @@ abs_start_time = time.time()
 
 first_file_titles = 22288
 df = load(filenames)
-df_titles = df.select("title").limit(len(filenames * first_file_titles))
-df_titles.persist(StorageLevel.DISK_ONLY)
+rows = df.select("title").take(len(filenames * first_file_titles))
+df_titles = load_to_spark.createDataFrame(rows)
 df_titles.show()
 df = df.withColumn('revision', explode(df.revision))
 #test_select()
