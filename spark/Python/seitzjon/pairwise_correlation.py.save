@@ -1,0 +1,22 @@
+from pyspark.sql.functions import col, window
+import load_to_spark
+
+base_path = "/scratch/wikipedia-dump/wiki_small_"
+filenames = []
+soccer = ["FC Augsburg", "Bundesliga"]
+
+for i in range(1, 27):
+    filenames.append(base_path + str(i) + ".json")
+
+def load_soccer(df, soccer):
+    df_soccer = df.where(col("title").rlike("|".join(soccer)))
+    return df_soccer
+
+print("loading files")
+df = load_to_spark.init_article_hotspot_df(filenames)
+print("selecting needed")
+df_soccer = load_soccer(df, soccer)
+df_soccer.cache()
+df_soccer.show()
+
+df_s_windowed = df_soccer.groupBy(col("title"), window(col("timestamp"), "2 weeks")).count()

@@ -16,6 +16,7 @@ parser.add_argument("--filenumber")
 parser.add_argument("--filecount")
 parser.add_argument("--windowsize", help="the window size in weeks")
 parser.add_argument("--multiplier", help="the multiplier to identify hotspots")
+parser.add_argument("--articlecount", help="single or multiple")
 args = parser.parse_args()
 
 if args.filecount:

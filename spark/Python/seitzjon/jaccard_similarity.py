@@ -1,7 +1,7 @@
 from pyspark.sql.types import StructType, StructField, StringType, ArrayType
 from pyspark.ml.linalg import Vectors
 from pyspark.ml.feature import MinHashLSH
-from pyspark.sql.functions import desc, asc, col, explode
+from pyspark.sql.functions import desc, asc, col, explode, collect_set
 from pyspark.sql.window import Window as W
 import pyspark.sql.functions as f
 
@@ -20,9 +20,7 @@ def jaccard_with_crossjoin(df_t_user, to_compare, regarding, mode="dist", minval
     df1 = df_t_user.select(col(to_compare).alias(to_compare + "1"), col(regarding).alias(regarding + "1"), col("count").alias("count1"))
     df2 = df_t_user.select(col(to_compare).alias(to_compare + "2"), col(regarding).alias(regarding + "2"), col("count").alias("count2"))
     df_joined = df1.crossJoin(df2)
-    df_joined.show()
     df_joined = df_joined.where(col(to_compare + "1") < col(to_compare + "2"))
-    df_joined.cache()
     df_joined = df_joined.repartition(200, col(to_compare + "1"), col(to_compare + "2"))
     df_joined.show() #show 2
     print("Join complete")
@@ -73,62 +71,85 @@ def jaccard_with_crossjoin(df_t_user, to_compare, regarding, mode="dist", minval
     return df_jaccard
 
 def jaccard_with_min_hashing(df_t_user, to_compare, regarding, mode="dist", minval=0.0, maxval=1.0):
+    df_t_user = df_t_user.distinct()
     #get regarding
     df_regarding = df_t_user.select(col(regarding)).distinct()
+    print("regarding", df_regarding.count())
+
+    if df_regarding == None or df_regarding.rdd.isEmpty():
+        return None
 
     #create ids for each regarding element
     print("Creating ids")
     windowSpec = W.orderBy(regarding)
     df_regarding = df_regarding.withColumn("id", f.row_number().over(windowSpec))
+    df_regarding.groupBy("id").count().orderBy(desc("count")).show()
 
     #window function moved df_titles to single partition --> repartition
     df_regarding.repartition(200)
-    print("df_regarding", df_regarding.count())
+    df_regarding.show()
 
     #join dataframes to get author/id pairs
     print("Joining...")
     df1 = df_t_user.alias("df1")
     df2 = df_regarding.alias("df2")
-    df_joined = df1.join(df2, col('df1.' + regarding) == col('df2.' + regarding)).select(col('df1.' + to_compare), col('df2.id'))
+    df_joined = df1.join(df2, col('df1.' + regarding) == col('df2.' + regarding)).select(col('df1.' + to_compare).alias(to_compare), col('df2.id').alias("id"))
     df_joined.show()
-    print("df_joined", df_joined.count())
     print("Join Complete")
 
     #create binary vectors
     print("Creating vectors")
     count = df_regarding.count() + 10
-    max_index = int(df_regarding.select(col("id")).orderBy(desc("id")).first()["id"]) + 10
+    tmp = df_regarding.select(col("id")).orderBy(desc("id")).first()
+    print("max_id", tmp["id"])
+    if tmp != None:
+        max_index = int(tmp["id"]) + 10
+    else:
+        max_index = 0
     size = max(count, max_index)
-    df_joined = df_joined.rdd.map(lambda r: (r[to_compare], float(r['id']))).groupByKey().map(lambda r: sparse_vec(r, size)).toDF()
+    #df_joined = df_joined.rdd.map(lambda r: (r[to_compare], float(r['id']))).groupByKey().map(lambda r: sparse_vec(r, size)).toDF()
+    df_joined = df_joined.groupBy(to_compare).agg(collect_set("id")).rdd.map(lambda r: sparse_vec(r, size)).toDF()
     print("df_joined", df_joined.count())
 
     df_res = df_joined.select(col('_1').alias(to_compare), col('_2').alias('features'))
     df_res.show()
     df_res = df_res.repartition(200)
+    #df_res.cache()
     print("df_res", df_res.count())
 
     print("Creating model")
-    mh = MinHashLSH(inputCol="features", outputCol="hashes", numHashTables=200)
+    mh = MinHashLSH(inputCol="features", outputCol="hashes", numHashTables=100)
     model = mh.fit(df_res)
     model.transform(df_res).show()
 
     print("Calculating Jaccard")
     df_jacc_dist = model.approxSimilarityJoin(df_res, df_res, 1.0, distCol="jaccard")
+    df_jacc_dist.cache()
     df_jacc_dist.show()
-    print("df_jacc_dist", df_jacc_dist.count())
 
     print("Selecting needed columns")
-    df_jacc_dist = df_jacc_dist.select(col("datasetA." + to_compare).alias(to_compare + "1"),
+    df_filtered = df_jacc_dist.select(col("datasetA." + to_compare).alias(to_compare + "1"),
                 col("datasetB." + to_compare).alias(to_compare + "2"),
-                col("jaccard")).where(col(to_compare + "1") < col(to_compare + "2"))
-    print(df_jacc_dist.count())
-    df_jacc_dist = df_jacc_dist.where((col("jaccard") >= minval) & (col("jaccard") <= maxval))
-    print(df_jacc_dist.count())
+                col("jaccard"))
+    df_filtered.show()
+    df_filtered = df_filtered.where(col(to_compare + "1") < col(to_compare + "2"))
+    df_filtered.show()
+    #hier irgendwo Problem
+    df_needed = df_filtered.where((col("jaccard") >= minval) & (col("jaccard") <= maxval))
+    df_needed.show()
 
     if mode == "sim":
-        df_jacc_dist = df_jacc_dist.withColumn("jaccard", 1.0 - col("jaccard"))
+        df_needed = df_needed.withColumn("jaccard", 1.0 - col("jaccard"))
 
-    return df_jacc_dist
+    return df_needed
+
+#requires df1 and df2 to have the same columns
+def jaccard_two_dfs(df1, df2, to_compare, regarding, minval=0.0, maxval=1.0):
+    df_union = df1.union(df2)
+    df_union.cache()
+    df_jaccard = jaccard_with_min_hashing(df_union, to_compare, regarding)
+    df_needed = df_jaccard.where((col(to_compare + "1").startswith("::C::") & (~col(to_compare + "2").startswith("::C::"))) | (col(to_compare + "2").startswith("::C::") & (~col(to_compare + "1").startswith("::C::"))))
+    return df_needed
 
 def sparse_vec(r, count):
     list = set(r[1])

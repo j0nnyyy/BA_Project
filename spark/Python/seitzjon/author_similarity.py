@@ -72,7 +72,6 @@ parser.add_argument("--filenumber", help="filenumber of the file to load")
 parser.add_argument("--jaccmethod", help="cross for simple crossjoin, hash for min hashing")
 parser.add_argument("--minval", help="minimum value that will be plotted")
 parser.add_argument("--maxval", help="maximum value that will be plotted")
-parser.add_argument("--activity", help="active for active authors, inactive for inactive authors, all for all authors")
 args = parser.parse_args()
 
 #get titles
@@ -91,27 +90,27 @@ df_joined = df1.join(df2, col('df1.title') == col('df2.title')).select(col('df1.
 count = df_joined.count()
 df_joined = df_joined.rdd.map(lambda r: (r['author'], float(r['id']))).groupByKey().map(lambda r: sparse_vec(r, count)).toDF()
 
-if args.activity:
-    activity = args.active
+#if args.activity:
+#    activity = args.active
 
 df = load_to_spark.main_init_df(filenames)
 
 mh = MinHashLSH(inputCol="features", outputCol="hashes", numHashTables=5)
 model = mh.fit(df_res)
 
-if activity == "active":
-    df_grouped = df_t_user.groupBy(col("author").alias("author1")).count()
-    df_grouped = df_grouped.where(col("count") > 10)
-    df_t_user = df_t_user.join(df_grouped, col("author") == col("author1")).select(col("author"), col("title"))
-if activity == "inactive":
-    df_grouped = df_t_user.groupBy(col("author").alias("author1")).count()
-    df_grouped = df_grouped.where(col("count") <= 10)
-    df_t_user = df_t_user.join(df_goruped, col("author") == col("author1")).select(col("author"), col("title"))
+#if activity == "active":
+#    df_grouped = df_t_user.groupBy(col("author").alias("author1")).count()
+#    df_grouped = df_grouped.where(col("count") > 10)
+#    df_t_user = df_t_user.join(df_grouped, col("author") == col("author1")).select(col("author"), col("title"))
+#if activity == "inactive":
+#    df_grouped = df_t_user.groupBy(col("author").alias("author1")).count()
+#    df_grouped = df_grouped.where(col("count") <= 10)
+#    df_t_user = df_t_user.join(df_goruped, col("author") == col("author1")).select(col("author"), col("title"))
 
 #select random authors
 print("Selecting sample")
 count = df_t_user.count() #count 1
-df_t_user = df_t_user.sample(False, fraction= 20000.0 / count, seed=int(round(time.time() * 1000)))
+#df_t_user = df_t_user.sample(False, fraction= 100000.0 / count, seed=int(round(time.time() * 1000)))
 df_t_user.cache()
 print(df_t_user.count()) #count 2
 
@@ -148,4 +147,8 @@ elif jaccard_method == 'both':
 else:
     print("Unrecognized jaccard method:", jaccard_method)
 
-draw_histogram(df_hist)
+df_authors = df_t_user.select(col("author"))
+all_count = df_authors.crossJoin(df_authors).count() - df_authors.count()
+
+print("All values:", all_count)
+print("Done")

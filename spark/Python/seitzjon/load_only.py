@@ -63,20 +63,22 @@ def test_load_no_schema():
     load_no_schema(filenames)
     end = time.time()
     duration = end - start
+    print(duration)
     description = "load_count_no_schema"
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-    save_to_log(file_count, worker_count, duration, description)
+#    save_to_log(file_count, worker_count, duration, description)
 
 def test_load_schema():
     start = time.time()
     load_schema(filenames)
     end = time.time()
     duration = end - start
+    print(duration)
     description = "load_count_schema"
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-    save_to_log(file_count, worker_count, duration, description)
+#    save_to_log(file_count, worker_count, duration, description)
 
 if args.schema:
     test_load_schema()

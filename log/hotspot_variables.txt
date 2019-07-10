@@ -1,0 +1,3 @@
+author_occurences_per_hotspot: before=2, after=2, multiplier=2
+category_hotspots: before=2, after=2, multiplier=2
+

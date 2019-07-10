@@ -116,7 +116,7 @@ print("Real Users Selected")
 
 #select random authors
 count = df_t_user.count() #count 1
-df_t_user = df_t_user.sample(False, fraction=20000.0 / count, seed=int(round(time.time() * 1000)))
+#df_t_user = df_t_user.sample(False, fraction=100000.0 / count, seed=int(round(time.time() * 1000)))
 df_t_user.cache()
 print(df_t_user.count()) #count 2
 
@@ -141,5 +141,9 @@ if jaccard_method == "both":
     draw_histogram(df_res_hash, "hash")
 else:
     draw_histogram(df_res, jaccard_method)
+
+df_titles = df.select(col("title")).distinct()
+count = df_titles.count()
+print("All title pairs", ((count * count) - count) / 2)
 
 print("Done")
