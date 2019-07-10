@@ -10,6 +10,7 @@ base_path = '/scratch/wikipedia-dump/wiki_small_'
 f_big = '/scratch/wikipedia-dump/wikiJSON.json'
 
 sc = None
+spark = None
 filenames = []
 
 schema = StructType([StructField("id",StringType(),True),StructField("revision", \
@@ -19,15 +20,20 @@ schema = StructType([StructField("id",StringType(),True),StructField("revision",
     StructField("parentid",StringType(),True),StructField("timestamp",StringType(),True)]),True), \
     True),StructField("title",StringType(),True)])
 
-def create_dataframe(filenames):
+def create_session():
     global sc
+    global spark
     spark = SparkSession \
         .builder \
         .appName("Python Spark SQL basic example") \
-        .config("spark.executor.memory", "50g") \
+        .config("spark.executor.memory", "128g") \
         .config("spark.speculation", "true") \
+        .config("spark.sql.shuffle.partitions", "100") \
         .getOrCreate()
     sc = spark.sparkContext
+
+def create_dataframe(filenames):
+    create_session()
     df = spark.read.format("json").load(filenames, schema=schema)
     return df
 

@@ -108,7 +108,7 @@ def test_select():
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 #    save_to_log(file_count, worker_count, dur1, 'select')
-    save_to_log(file_count, worker_count, dur2, 'select_count')
+#    save_to_log(file_count, worker_count, dur2, 'select_count')
     print('select test complete')
 
 def test_filter():
@@ -116,7 +116,7 @@ def test_filter():
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 #    save_to_log(file_count, worker_count, dur1, 'filter')
-    save_to_log(file_count, worker_count, dur2, 'filter_count')
+#    save_to_log(file_count, worker_count, dur2, 'filter_count')
     print('filter test complete')
 
 def test_groupby(df):
@@ -132,16 +132,16 @@ def test_crossjoin(df1, df2):
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
 #    save_to_log(file_count, worker_count, dur1, 'crossjoin')
-    save_to_log(file_count, worker_count, dur2, 'crossjoin_count')
+#    save_to_log(file_count, worker_count, dur2, 'crossjoin_count')
     print('crossjoin test complete')
 
 abs_start_time = time.time()
 
 df = load(filenames)
 df = df.withColumn('revision', explode(df.revision))
-test_select()
-test_filter()
-
+#test_select()
+#test_filter()
+#
 #prepare groupby data
 df2 = load_to_spark.main_init_df(filenames)
 df_monthly_ts = df2.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))\
@@ -150,25 +150,25 @@ df_monthly_ts = df2.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('
 test_groupby(df_monthly_ts)
 
 #prepare crossjoin data
-spark = SparkSession \
-    .builder \
-    .appName("Python Spark SQL basic example") \
-    .config("spark.executor.memory", "128g") \
-    .getOrCreate()
-df_gn = load_to_spark.init(filenames)
-df_monthly_ts = df_monthly_ts.groupBy("yearmonth", "title").count().orderBy(desc("count"))
-df2 = df2.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))
-df_monthly = df2.groupBy("yearmonth", "title").count().orderBy(desc("count"))
-min_date, max_date = df_monthly_ts.select(min_("yearmonth").cast("long"), max_("yearmonth").cast("long")).first()
-data = [(min_date, max_date)]
-df_dates = spark.createDataFrame(data, ["minDate", "maxDate"])
-df_min_max_date = df_dates.withColumn("minDate", col("minDate").cast("timestamp")).withColumn("maxDate", col("maxDate").cast("timestamp"))
-df_groups = df_gn.select("title").distinct()
-df_formatted_ts = df_min_max_date.withColumn("monthsDiff", f.months_between("maxDate", "minDate"))\
-    .withColumn("repeat", f.expr("split(repeat(',', monthsDiff), ',')"))\
-    .select("*", f.posexplode("repeat").alias("date", "val"))\
-    .withColumn("date", f.expr("add_months(minDate, date)"))\
-    .withColumn("yearmonth", f.concat(f.year("date"), f.lit('-'), format_string("%02d", f.month("date"))))\
-    .select('yearmonth')
-
-test_crossjoin(df_groups, df_formatted_ts)
+#spark = SparkSession \
+#    .builder \
+#    .appName("Python Spark SQL basic example") \
+#    .config("spark.executor.memory", "128g") \
+#    .getOrCreate()
+#df_gn = load_to_spark.init(filenames)
+#df_monthly_ts = df_monthly_ts.groupBy("yearmonth", "title").count().orderBy(desc("count"))
+#df2 = df2.withColumn("yearmonth", f.concat(f.year("editTime"), f.lit('-'), format_string("%02d", f.month("editTime"))))
+#df_monthly = df2.groupBy("yearmonth", "title").count().orderBy(desc("count"))
+#min_date, max_date = df_monthly_ts.select(min_("yearmonth").cast("long"), max_("yearmonth").cast("long")).first()
+#data = [(min_date, max_date)]
+#df_dates = spark.createDataFrame(data, ["minDate", "maxDate"])
+#df_min_max_date = df_dates.withColumn("minDate", col("minDate").cast("timestamp")).withColumn("maxDate", col("maxDate").cast("timestamp"))
+#df_groups = df_gn.select("title").distinct()
+#df_formatted_ts = df_min_max_date.withColumn("monthsDiff", f.months_between("maxDate", "minDate"))\
+#    .withColumn("repeat", f.expr("split(repeat(',', monthsDiff), ',')"))\
+#    .select("*", f.posexplode("repeat").alias("date", "val"))\
+#    .withColumn("date", f.expr("add_months(minDate, date)"))\
+#    .withColumn("yearmonth", f.concat(f.year("date"), f.lit('-'), format_string("%02d", f.month("date"))))\
+#    .select('yearmonth')
+#
+#test_crossjoin(df_groups, df_formatted_ts)
