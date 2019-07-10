@@ -3,12 +3,12 @@ from pyspark import SparkContext
 from pyspark.sql.functions import min as min_, max as max_
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
-from pyspark.sql.functions import desc, asc, format_string, col, length
+from pyspark.sql.functions import desc, asc, format_string, col, length, explode
 import load_to_spark
 import time
 import argparse
 
-logpath = '/home/ubuntu/BA_Project/log.txt'
+logpath = '/home/ubuntu/BA_Project/perf_log.txt'
 base_path = '/scratch/wikipedia-dump/wiki_small_'
 f_big = '/scratch/wikipedia-dump/wikiJSON.json'
 
@@ -27,6 +27,13 @@ else:
     f_name = base_path + '1.json'
     filenames.append(f_name)
 
+schema = StructType([StructField("id",StringType(),True),StructField("revision", \
+    ArrayType(StructType([StructField("comment",StringType(),True),StructField("contributor", \
+    StructType([StructField("id",StringType(),True),StructField("ip",StringType(),True), \
+    StructField("username",StringType(),True)]),True),StructField("id",StringType(),True), \
+    StructField("parentid",StringType(),True),StructField("timestamp",StringType(),True)]),True), \
+    True),StructField("title",StringType(),True)])
+    
 sc = None
 df = None
 
@@ -38,84 +45,90 @@ def load(filenames):
         .config("spark.executor.memory", "128g") \
         .getOrCreate()
     sc = spark.sparkContext
-    df = spark.read.load(filenames, format="json")
+    df = spark.read.load(filenames, format="json", schema=schema)
     return df
 
 def select(df):
-    df.select("title")
-
+    start = time.time()
+    tmp = df.select(df.title, df.revision.contributor.username, df.revision.timestamp)
+    end1 = time.time()
+    tmp.count()
+    end2 = time.time()
+    dur1 = end1 - start()
+    dur2 = end2 - start()
+    return dur1, dur2
+    
 def filter(df):
-    df.filter(length(df.title) > 15)
+    start = time.time()
+    tmp = df.filter(length(df.title) > 15)
+    end1 = time.time
+    tmp.count()
+    end2 = time.time()
+    dur1 = end1 - start
+    dur2 = end2 - start
+    return dur1, dur2
 
 def groupBy(df):
-    df.groupby("yearmonth", "title")
-
+    start = time.time()
+    tmp = df.groupby("yearmonth", "title")
+    end1 = time.time()
+    tmp.count()
+    end2 = time.time()
+    dur1 = end1 - start
+    dur2 = end2 - start
+    return dur1, dur2
+    
 def crossjoin(df1, df2):
-    df1.crossJoin(df2)
+    start = time.time()
+    tmp = df1.crossJoin(df2)
+    end1 = time.time()
+    tmp.count()
+    end2 = time.time()
+    dur1 = end1 - start
+    dur2 = end2 - start
+    return dur1, dur2
 
 def save_to_log(file_count, worker_count, duration, description):
     file = open(logpath, 'a+')
     output = '{} {} {} {}\n'.format(worker_count, file_count, duration, description)
     file.write(output)
 
-def test_load():
-    global df
-    start_time = time.time()
-    df = load(filenames)
-    end_time = time.time()
-    file_count = len(filenames)
-    worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-    duration = end_time - start_time
-    description = 'load'
-    save_to_log(file_count, worker_count, duration, description)
-    print('load test complete')
-
 def test_select():
-    start_time = time.time()
-    select(df)
-    end_time = time.time()
+    dur1, dur2 = select(df)
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-    duration = end_time - start_time
-    description = 'select'
-    save_to_log(file_count, worker_count, duration, description)
+    save_to_log(file_count, worker_count, dur1, 'select')
+    save_to_log(file_count, worker_count, dur2, 'select_count')
     print('select test complete')
 
 def test_filter():
-    start_time = time.time()
-    filter(df)
-    end_time = time.time()
+    dur1, dur2 = filter(df)
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-    duration = end_time - start_time
-    description = 'filter'
-    save_to_log(file_count, worker_count, duration, description)
+    save_to_log(file_count, worker_count, dur1, 'filter')
+    save_to_log(file_count, worker_count, dur2, 'filter_count')
     print('filter test complete')
 
 def test_groupby(df):
-    start_time = time.time()
-    filter(df)
-    end_time = time.time()
+    dur1, dur2 = filter(df)
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-    duration = end_time - start_time
-    description = 'groupby'
-    save_to_log(file_count, worker_count, duration, description)
+    save_to_log(file_count, worker_count, duration, 'groupby')
+    save_to_log(file_count, worker_count, duration, 'groupby_count')
     print('groupby test complete')
 
 def test_crossjoin(df1, df2):
-    start_time = time.time()
-    crossjoin(df1, df2)
-    end_time = time.time()
+    dur1, dur2 = crossjoin(df1, df2)
     file_count = len(filenames)
     worker_count = sc._jsc.sc().getExecutorMemoryStatus().size() - 1
-    duration = end_time - start_time
-    description = 'crossjoin'
-    save_to_log(file_count, worker_count, duration, description)
+    save_to_log(file_count, worker_count, dur1, 'crossjoin')
+    save_to_log(file_count, worker_count, dur2, 'crossjoin_count')
     print('groupby test complete')
 
 abs_start_time = time.time()
-test_load()
+
+load(filenames)
+df = df.withColumn('revision', explode(df.revision))
 test_select()
 test_filter()
 

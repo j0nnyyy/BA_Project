@@ -24,6 +24,13 @@ else:
     #load only one file to prevent errors
     f_name = base_path + '1.json'
     filenames.append(f_name)
+    
+schema = StructType([StructField("id",StringType(),True),StructField("revision", \
+    ArrayType(StructType([StructField("comment",StringType(),True),StructField("contributor", \
+    StructType([StructField("id",StringType(),True),StructField("ip",StringType(),True), \
+    StructField("username",StringType(),True)]),True),StructField("id",StringType(),True), \
+    StructField("parentid",StringType(),True),StructField("timestamp",StringType(),True)]),True), \
+    True),StructField("title",StringType(),True)])
 
 def create_dataframe(filenames):
     global sc
@@ -33,7 +40,7 @@ def create_dataframe(filenames):
         .config("spark.executor.memory", "128g") \
         .getOrCreate()
     sc = spark.sparkContext
-    df = spark.read.format("json").load(filenames)
+    df = spark.read.format("json").load(filenames, schema=schema)
     return df
 
 
