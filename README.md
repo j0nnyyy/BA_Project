@@ -18,7 +18,13 @@ Inhalt der ursprünglichen readme.md:
 3. after that it could be used for executing any of the script from spark directory
 
 ## BA_Project/spark/Python/seitzjon:
-Enthält die für diese Bachelorarbeit implementierten Skripte:
+Enthält die für diese Bachelorarbeit implementierten Skripte. Um die Spark-Skripte zu starten wird das spark-submit-Skript verwendet. Teilweise ist es notwendig andere Python-Skripte mit einzubinden. Dies erfolgt mit der --py-files Flag. Ein Aufruf für das author_similarity.py-Skript sieht beispielsweise wie folgt aus:
+
+```
+spark-submit --master spark://172.29.0.5:7077 --py-files /path_to_script_directory/jaccard_similarity.py /path_to_script_directory/author_similarity.py --filecount 3 --maxval 0.9
+```
+
+Im Folgenden sind nun alle Skripte mit ihren Parametern aufgelistet:
 
 - __active_inactive_count.py__: Ermittelt für jeden Wikipedia-Dump die Anzahl der Benutzer, welche "aktiv" waren, also eine bestimmte Anzahl an Revisionen verfasst haben, bzw. "inaktiv" waren.
 
@@ -138,4 +144,6 @@ Enthält die für diese Bachelorarbeit implementierten Skripte:
     Parameter:
     - *--filenumber*: Dateinummer der zu ladenden Datei
     
-    
+- __sliding_window_hotspots.py__: Erstellt ein Histogramm zum Verhältnis von Autoren zur Anzahl der Revisionen in Hotspots.
+
+- __sql_to_json.py__: Wandelt den categorylinks.sql-Dump in eine JSON-Datei um.
