@@ -13,18 +13,15 @@ from pyspark_dist_explore import hist
 import time
 
 search_text = ['Bot', 'Bots']
-logpath = '/home/ubuntu/BA_Project/log.txt'
-
-#retrieve loaded file count
-file_count = len(load_to_spark.filename)
+filenames = ['/home/ubuntu/dumps/wiki_small_1.json']
 
 def draw_histogram(df):
     fig, axes = plt.subplots(nrows=2, ncols=2)
     fig.set_size_inches(20, 20)
     hist(axes[0, 0], [df], bins=20, color=['red'])
-    axes[0, 0].set_xlabel('Jaccard Koeffizient')
-    axes[0, 0].set_ylabel('Anzahl der Artikeln')
-    plt.savefig('Jaccard_Similarity')
+    axes[0, 0].set_xlabel('Jaccard Distanz')
+    axes[0, 0].set_ylabel('Anzahl der Artikel')
+    plt.savefig('title_jaccard_distance')
 
 
 def sparse_vec(r):
@@ -32,15 +29,10 @@ def sparse_vec(r):
     li = sorted(li)
     l = len(li)
     vals = [1.0 for x in range(l)]
-    return r[0], Vectors.sparse(942000, li, vals)
+#    return r[0], Vectors.sparse(942000, li, vals)
+    return r[0], Vectors.sparse(1000000, li, vals)
 
-#get start time
-start_time = time.time()
-	
-df_gn = load_to_spark.main_init_df()
-
-#retrieve spark worker count
-worker_count = load_to_spark.sc._jsc.sc().getExecutorMemoryStatus().size() - 1
+df_gn = load_to_spark.main_init_df(filenames)
 
 df_titles = df_gn.select("title", "author").where(col("author").isNotNull())
 
@@ -79,22 +71,13 @@ print("The hashed dataset where hashed values are stored in the column 'hashes':
 model.transform(df_res).show()
 
 print("Approximately distance smaller than 0.6:")
-df_jacc_dist = model.approxSimilarityJoin(df_res, df_res, 0.6, distCol="JaccardDistance")\
+df_jacc_dist = model.approxSimilarityJoin(df_res, df_res, 1.0, distCol="JaccardDistance")\
     .select(col("datasetA.title").alias("title"),
             col("JaccardDistance")).filter("JaccardDistance != 0").orderBy(desc("JaccardDistance"))
 df_jacc_dist.show()
 
 df_hist = df_jacc_dist.select(col("JaccardDistance"))
 
-#get end time
-end_time = time.time()
-
 draw_histogram(df_hist)
-
-#calculate duration and write the application information to the log file
-duration = end_time - start_time
-file = open(logpath, 'a+')
-output = '{} {} {}\n'.format(worker_count, file_count, duration)
-file.write(output)
 
 print('DONE')

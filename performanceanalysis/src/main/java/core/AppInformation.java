@@ -61,6 +61,42 @@ public class AppInformation {
 
     }
 
+    public double getStdDeviation() {
+
+        double avg = getAvgDuration();
+        double sum = 0;
+
+        for(int i = 0; i < durations.size(); i++) {
+            double deviation = Math.pow(avg - durations.get(i), 2);
+            sum += deviation;
+        }
+
+        sum /= durations.size() - 1;
+        sum = Math.sqrt(sum);
+
+        return sum;
+
+    }
+
+    public double getStdError() {
+
+        double avg = getAvgDuration();
+        double sum = 0;
+
+        for(int i = 0; i < durations.size(); i++) {
+            double deviation = Math.pow(avg - durations.get(i), 2);
+            sum += deviation;
+        }
+
+        sum /= durations.size() - 1;
+        sum = Math.sqrt(sum);
+
+        sum /= Math.sqrt(durations.size());
+
+        return sum;
+
+    }
+
     public ArrayList<Double> getDurations() {
         return durations;
     }

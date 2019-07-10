@@ -1,0 +1,22 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+file = open("/home/ubuntu/BA-Project/log/jaccard_data_log.txt", "r")
+
+for line in file:
+    pass
+last = line
+
+parts = last.split(">>>")
+
+if parts[0] > 1:
+    outpath = "/home/ubuntu/jaccard_dist_cross_" + parts[0] + "_files.png"
+else:
+    outpath = "/home/ubuntu/jaccard_dist_cross_f_" + parts[1] + ".png"
+
+
+
+
+
+
+file.close()

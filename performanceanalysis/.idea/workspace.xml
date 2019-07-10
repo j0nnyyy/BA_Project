@@ -17,12 +17,39 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="DataPlotter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/core/DataPlotter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="677">
-              <caret line="90" column="21" selection-start-line="90" selection-start-column="21" selection-end-line="90" selection-end-column="21" />
+            <state relative-caret-position="357">
+              <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CF2.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/gui/CF2.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="7446">
+              <caret line="446" column="102" selection-start-line="446" selection-start-column="102" selection-end-line="446" selection-end-column="102" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ErrorBars.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/core/ErrorBars.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="175">
+              <caret line="232" column="34" selection-start-line="232" selection-start-column="34" selection-end-line="232" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BarChart.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/core/BarChart.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1632">
+              <caret line="100" column="73" selection-start-line="100" selection-start-column="73" selection-end-line="100" selection-end-column="73" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -30,14 +57,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ChartFrame.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/gui/ChartFrame.java">
+      <file leaf-file-name="DataContainer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/core/containers/DataContainer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="160" column="25" selection-start-line="160" selection-start-column="25" selection-end-line="160" selection-end-column="25" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="357">
+              <caret line="27" selection-start-line="27" selection-end-line="27" />
             </state>
           </provider>
         </entry>
@@ -45,20 +69,8 @@
       <file leaf-file-name="DataLoader.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/core/DataLoader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="799">
-              <caret line="48" column="30" lean-forward="true" selection-start-line="48" selection-start-column="30" selection-end-line="48" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InformationContainer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/core/InformationContainer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="33" column="39" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="39" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="68">
+              <caret line="5" column="25" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -66,12 +78,17 @@
       <file leaf-file-name="AppInformation.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/core/AppInformation.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="629">
-              <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
-              <folding>
-                <element signature="e#478#479#0" expanded="true" />
-                <element signature="e#509#510#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="1836">
+              <caret line="120" selection-start-line="120" selection-end-line="120" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InformationContainer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/core/InformationContainer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2601">
+              <caret line="156" column="63" selection-start-line="156" selection-start-column="48" selection-end-line="156" selection-end-column="63" />
             </state>
           </provider>
         </entry>
@@ -96,6 +113,7 @@
       <find>pfile</find>
       <find>get(</find>
       <find>setbord</find>
+      <find>getseriesbydesc</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -109,11 +127,16 @@
         <option value="$PROJECT_DIR$/src/main/java/AppInformation.java" />
         <option value="$PROJECT_DIR$/src/main/java/DataLoader.java" />
         <option value="$PROJECT_DIR$/src/main/java/InformationContainer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/core/DataLoader.java" />
-        <option value="$PROJECT_DIR$/src/main/java/core/AppInformation.java" />
         <option value="$PROJECT_DIR$/src/main/java/core/DataPlotter.java" />
         <option value="$PROJECT_DIR$/src/main/java/core/InformationContainer.java" />
         <option value="$PROJECT_DIR$/src/main/java/gui/ChartFrame.java" />
+        <option value="$PROJECT_DIR$/src/main/java/core/AppInformation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/core/containers/DataContainer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/gui/CF2.java" />
+        <option value="$PROJECT_DIR$/src/main/java/core/DataLoader.java" />
+        <option value="$PROJECT_DIR$/src/main/java/core/BarChart.java" />
+        <option value="$PROJECT_DIR$/src/main/java/core/Calculations.java" />
+        <option value="$PROJECT_DIR$/src/main/java/core/ErrorBars.java" />
       </list>
     </option>
   </component>
@@ -128,11 +151,11 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="784" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-7" />
+    <option name="y" value="8" />
+    <option name="width" value="1378" />
+    <option name="height" value="727" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -141,7 +164,6 @@
     <panes>
       <pane id="PackagesPane" />
       <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -187,6 +209,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -208,7 +231,29 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.ChartFrame">
+  <component name="RunManager" selected="Application.ErrorBars">
+    <configuration name="BarChart" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="core.BarChart" />
+      <module name="performanceanalysis" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="core.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+    </configuration>
+    <configuration name="CF2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="gui.CF2" />
+      <module name="performanceanalysis" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="gui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+    </configuration>
     <configuration name="ChartFrame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="gui.ChartFrame" />
       <module name="performanceanalysis" />
@@ -224,6 +269,17 @@
       <option name="MAIN_CLASS_NAME" value="core.DataPlotter" />
       <module name="performanceanalysis" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    </configuration>
+    <configuration name="ErrorBars" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="core.ErrorBars" />
+      <module name="performanceanalysis" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="core.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -269,9 +325,15 @@
     <list>
       <item itemvalue="Application.DataPlotter" />
       <item itemvalue="Application.ChartFrame" />
+      <item itemvalue="Application.ErrorBars" />
+      <item itemvalue="Application.CF2" />
+      <item itemvalue="Application.BarChart" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ErrorBars" />
+        <item itemvalue="Application.BarChart" />
+        <item itemvalue="Application.CF2" />
         <item itemvalue="Application.ChartFrame" />
         <item itemvalue="Application.DataPlotter" />
       </list>
@@ -291,55 +353,35 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="1" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info anchor="right" id="Palette" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" weight="0.32972136" />
-      <window_info anchor="right" id="Palette&#9;" />
-      <window_info id="Image Layers" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="right" id="Maven Projects" weight="0.32980332" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32972136" />
-      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info id="Capture Tool" />
-      <window_info id="Designer" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2193646" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32972136" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info id="UI Designer" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info id="Favorites" side_tool="true" />
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info id="Designer" order="2" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Capture Analysis" order="3" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32943678" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.32943678" />
+      <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5005208" side_tool="true" weight="0.32943678" />
+      <window_info anchor="right" id="Maven Projects" order="3" />
+      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32838285" />
+      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49947917" weight="0.32943678" />
       <window_info id="Capture Tool" order="2" />
+      <window_info id="Designer" order="2" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21104388" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="right" id="Palette&#9;" order="3" />
-      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49947917" weight="0.32943678" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5005208" side_tool="true" weight="0.32943678" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info active="true" anchor="bottom" id="Messages" order="7" visible="true" weight="0.32943678" />
-      <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24962178" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32972136" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -351,6 +393,185 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/InformationContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2601">
+          <caret line="156" column="63" selection-start-line="156" selection-start-column="48" selection-end-line="156" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/BarChart.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1632">
+          <caret line="100" column="73" selection-start-line="100" selection-start-column="73" selection-end-line="100" selection-end-column="73" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/DataPlotter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gui/ChartFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gui/CF2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7582">
+          <caret line="446" column="102" selection-start-line="446" selection-start-column="102" selection-end-line="446" selection-end-column="102" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/containers/DataContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/DataLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="748">
+          <caret line="45" column="24" selection-start-line="45" selection-start-column="24" selection-end-line="45" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/AppInformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1836">
+          <caret line="120" selection-start-line="120" selection-end-line="120" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/InformationContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2601">
+          <caret line="156" column="63" selection-start-line="156" selection-start-column="48" selection-end-line="156" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/ErrorBars.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1666">
+          <caret line="107" column="44" selection-start-line="107" selection-start-column="44" selection-end-line="107" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/DataPlotter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gui/ChartFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/containers/DataContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6120">
+          <caret line="360" lean-forward="true" selection-start-line="360" selection-end-line="360" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/AppInformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1428">
+          <caret line="84" lean-forward="true" selection-start-line="84" selection-end-line="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/InformationContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2652">
+          <caret line="156" column="63" selection-start-line="156" selection-start-column="48" selection-end-line="156" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gui/CF2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7582">
+          <caret line="446" column="94" selection-start-line="446" selection-start-column="94" selection-end-line="446" selection-end-column="94" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/DataPlotter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gui/ChartFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/containers/DataContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6154">
+          <caret line="362" column="48" selection-start-line="362" selection-start-column="48" selection-end-line="362" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/AppInformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1581">
+          <caret line="93" column="41" lean-forward="true" selection-start-line="93" selection-start-column="41" selection-end-line="93" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/InformationContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2652">
+          <caret line="156" column="63" selection-start-line="156" selection-start-column="48" selection-end-line="156" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/ErrorBars.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/DataPlotter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1530">
+          <caret line="90" column="21" selection-start-line="90" selection-start-column="21" selection-end-line="90" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/DataLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="48" column="30" lean-forward="true" selection-start-line="48" selection-start-column="30" selection-end-line="48" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/InformationContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="33" column="39" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/AppInformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="986">
+          <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/core/DataLoader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -362,9 +583,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="7" lean-forward="true" selection-start-column="7" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -372,9 +590,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
           <caret line="35" column="26" selection-start-line="35" selection-start-column="26" selection-end-line="35" selection-end-column="26" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -382,13 +597,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="7" column="36" lean-forward="true" selection-start-line="7" selection-start-column="36" selection-end-line="7" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -404,79 +612,117 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-323">
           <caret line="24" column="11" selection-start-line="24" selection-start-column="11" selection-end-line="24" selection-end-column="11" />
-          <folding>
-            <element signature="e#722#723#0" expanded="true" />
-            <element signature="e#760#761#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/gui.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/gui.java" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/java/lang/Runnable.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/PlotOption.java" />
+    <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="16" selection-start-column="16" selection-end-column="16" />
+        <state relative-caret-position="255">
+          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/java/lang/Runnable.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/knowm/xchart/xchart/3.5.4/xchart-3.5.4.jar!/org/knowm/xchart/XYSeries.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="485">
-          <caret line="67" column="25" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="25" />
+        <state relative-caret-position="153">
+          <caret line="15" column="11" selection-start-line="15" selection-start-column="11" selection-end-line="15" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/core/PlotOption.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/knowm/xchart/xchart/3.5.4/xchart-3.5.4.jar!/org/knowm/xchart/XYChart.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/core/AppInformation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
-          <folding>
-            <element signature="e#478#479#0" expanded="true" />
-            <element signature="e#509#510#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/core/DataLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="799">
-          <caret line="48" column="30" lean-forward="true" selection-start-line="48" selection-start-column="30" selection-end-line="48" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/core/DataPlotter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="677">
-          <caret line="90" column="21" selection-start-line="90" selection-start-column="21" selection-end-line="90" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/core/InformationContainer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="33" column="39" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="39" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="424">
+          <caret line="132" column="30" lean-forward="true" selection-start-line="132" selection-start-column="30" selection-end-line="132" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/gui/ChartFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="160" column="25" selection-start-line="160" selection-start-column="25" selection-end-line="160" selection-end-column="25" />
+        <state relative-caret-position="68">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/DataPlotter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/InformationContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2601">
+          <caret line="156" column="63" selection-start-line="156" selection-start-column="48" selection-end-line="156" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/AppInformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1836">
+          <caret line="120" selection-start-line="120" selection-end-line="120" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gui/CF2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7446">
+          <caret line="446" column="102" selection-start-line="446" selection-start-column="102" selection-end-line="446" selection-end-column="102" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/DataLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="5" column="25" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/containers/DataContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/java/lang/NumberFormatException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="64" selection-start-line="64" selection-end-line="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/java/lang/Integer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="127">
+          <caret line="614" selection-start-line="614" selection-end-line="614" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/BarChart.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1632">
+          <caret line="100" column="73" selection-start-line="100" selection-start-column="73" selection-end-line="100" selection-end-column="73" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/Calculations.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="39" selection-start-line="4" selection-start-column="39" selection-end-line="4" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/core/ErrorBars.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="232" column="34" selection-start-line="232" selection-start-column="34" selection-end-line="232" selection-end-column="34" />
         </state>
       </provider>
     </entry>
